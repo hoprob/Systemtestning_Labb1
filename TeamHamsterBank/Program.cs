@@ -6,6 +6,7 @@ namespace TeamHamsterBank
     {
         static void Main(string[] args)
         {
+            //Hej
         }
     }
 }
