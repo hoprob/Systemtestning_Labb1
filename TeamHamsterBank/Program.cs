@@ -6,6 +6,8 @@ namespace TeamHamsterBank
     {
         static void Main(string[] args)
         {
+            Bank.WriteAccounts();
+            Bank.Login();
         }
     }
 }

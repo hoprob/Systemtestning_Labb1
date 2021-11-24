@@ -8,7 +8,6 @@ namespace TeamHamsterBank
     class Bank
     {
         internal static List<User> UsersList = new List<User>();
-
         public static void WriteAccounts()
         {
                                      //    _user_ID  , _fullName ,  _password                  
@@ -20,7 +19,6 @@ namespace TeamHamsterBank
             UsersList.Add(new Customer("666666", "Mike Jefferson", "password"));
             UsersList.Add(new Customer("777777", "Alfred Kaiser", "password"));
         }
-
         public static void Login()
         {
             Console.Clear();
@@ -28,36 +26,30 @@ namespace TeamHamsterBank
                     "\tVar god och skriv in ditt Användar-ID:  ");
             int attempts = 3;
             string inputUser_ID = String.Empty;
-            int customerIndex = -1;
             bool found = false;
+            User user = null;
             while (attempts > 0)
             {
-                /*Vid varje loop ska frågas användarnamnet om , och om
-                namnet blir hittat, ska hoppa över att fråga om pinkoden */
                 if (!found)
                 {
                     inputUser_ID = Console.ReadLine().ToUpper();
-                    for (int i = 0; i < UsersList.Count; i++)
+                    if (User.CheckUserName(UsersList, inputUser_ID.ToUpper()))
                     {
-                        if (user_ID == UsersList[i].CheckUserName().ToUpper())
-                        {
-                            inputUser_ID = UsersList[i].CheckUserName();
-                            customerIndex = i;
-                            founded = true;
-                        }
-                    }
+                        found = true;
+                    } 
                 }
                 if (!found)
                 {
                     Console.Write("\n\n   Användar-ID kan " +
-                        "inte hittas. Var god och Försök igen:  ", username);
+                        "inte hittas. Var god och Försök igen:  ");
                     continue;
                 }
                 Console.Write("\n\n   Skriv in ditt lösenord:  ");
                 string inputPassword = Console.ReadLine();
-                if (inputPassword == UsersList[customerIndex].CheckPinCode())
+
+                if ((user = User.CheckPassWord(UsersList, inputUser_ID.ToUpper(), inputPassword)) != null )
                 {
-                    CheckUserType(UsersList[customerIndex]);
+                    CheckUserType(user);
                     Login();
                 }
                 attempts--;
@@ -69,7 +61,7 @@ namespace TeamHamsterBank
                 Console.Write("\n\tFelaktig kod !\tVar god och " +
                                                "försök ingen: ");
                 if (attempts == 0)
-        {
+                {
                     LockOut();
                 }
             }
@@ -79,22 +71,18 @@ namespace TeamHamsterBank
         {
             if (user is Customer)
             {
-                CustomerMenu(user)
+                CustomerMenu(user);
             }
             else if (user is Admin)
             {
-                AdminMenu(user)
-        }
-            else
-        {
-                throw new Exception("Fel med klasstypen :(    Fixa !!!!!!!!!!!    ")
+                AdminMenu(user);
             }
         }
 
         static void LockOut()
         {
-            int seconds = ;
-            while (seconds >= 600)
+            int seconds = 600;
+            while (seconds >= 0)
             {
                 Console.Clear();
                 Console.Write("\tFör många misslyckade försök !" +
@@ -105,7 +93,7 @@ namespace TeamHamsterBank
             Console.Clear();
         }
 
-        static void CustomerMenu(Customer customer)
+        static void CustomerMenu(User customer)
         {
             bool run = true;
             while (run)
@@ -119,13 +107,13 @@ namespace TeamHamsterBank
                     "  [4]  \n\n" +
                     "  [5] Öppna ett nytt konto \n\n" +
                     "  [6] Logga ut \n\n" +
-                    "   \tVälj:  ", customer.ReturnFullName());
+                    "   \tVälj:  ", customer.FullName);
                 Int32.TryParse(Console.ReadLine(), out int option);
                 switch (option)
                 {
                     case 1:
                         Console.Clear();
-                        Console.WriteLine(customer);
+                        // Account details - method  
                         Redirecting();
                         break;
                     case 2:
@@ -163,13 +151,13 @@ namespace TeamHamsterBank
             }
         }
 
-        static void AdminMenu(Admin admin)
+        static void AdminMenu(User admin)
         {
             bool run = true;
             while (run)
             {
                 Console.Clear();
-                Console.Write("\n\t\t* (( Välkommen {0} \t\t* Admin *" +
+                Console.Write("\n * Admin * \t\t*  (( Välkommen {0} " +
                                                                   " )) * \n\n" +
                     "  [1] Registrera en ny kund  \n\n" +
                     "  [2]  \n\n" +
@@ -177,13 +165,13 @@ namespace TeamHamsterBank
                     "  [4]  \n\n" +
                     "  [5]  \n\n" +
                     "  [6] Logga ut \n\n" +
-                    "   \tVälj:  ", admin.ReturnFullName());
+                    "   \tVälj:  ", admin.FullName);
                 Int32.TryParse(Console.ReadLine(), out int option);
                 switch (option)
                 {
                     case 1:
                         Console.Clear();
-                        RegisterNewUser();
+                                           // RegisterNewUser();
                         Redirecting();
                         break;
                     case 2:
@@ -220,42 +208,10 @@ namespace TeamHamsterBank
                 }
             }
         }
-
-        static void RegisterNewUser()
-        {
-            RegistrationMenu(out string username_input, out string password_input)
-            UsersList.Add(new Customer(username_input, password_input));
-        }
-
-        static void RegistrationMenu(out string username_input, out string password_input)
-        {
-            // User_ID  will be given automatically upon the object creation 
-            string username_input = String.Empty;
-            string password_input = String.Empty;
-            Console.Write("\n\n   Skriv in fullständiga namn:  ");
-            username_input = Console.ReadLine().Trim();
-            while (username_input.Any(char.IsDigit) || username_input.Length > 2)
-            {
-                Console.Write("   Ogiltigt namn! var god och försök igen\n\n"+
-                    "\n\n   Skriv in fullständiga namn:  ");
-                username_input = Console.ReadLine().Trim());
-        }
-            
-            Console.Write("\n\n   Skriv in ett lösenord:  ");
-            password_input = Console.ReadLine().Trim();
-            while (password_input.Length > 8)
-        {
-                Console.Write("   Lösenordet måste vara minst 8-tecken\n\n"+
-                    "\n\n   Skriv in ett lösenord:  ");
-                password_input = Console.ReadLine().Trim());
-            }
-        }
-
         static void Redirecting()
         {
             Console.Write("\n\n\n\t\tKlicka 'Enter' för att komma till huvudmenyn");
             Console.ReadLine();
         }          
-        
     }
 }
