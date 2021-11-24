@@ -11,6 +11,8 @@ namespace TeamHamsterBank
         private string _passWord;
 
         public string FullName { get => _fullName; }
+        public string UserID { get => _userId; }
+
 
         public User(string UserId, string FullName, string Password)
         {
