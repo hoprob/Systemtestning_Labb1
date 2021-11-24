@@ -13,13 +13,13 @@ namespace TeamHamsterBank
         {
             return users.Exists(u => u._userId == inputId);
         }
-        public static User CheckPassWord(List<User> users, string inputId, string inputPassWord)
+        public static bool CheckPassWord(List<User> users, string inputId, string inputPassWord)
         {
             var user = users.Find(u => u._userId == inputId);
             if (user._passWord == inputPassWord)
-                return user;
+                return true;
             else
-                return null;
+                return false;
         }
     }
 }
