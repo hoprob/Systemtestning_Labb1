@@ -81,16 +81,25 @@ namespace TeamHamsterBank
 
         static void LockOut()
         {
-            int seconds = 600;
-            while (seconds >= 0)
-            {
-                Console.Clear();
-                Console.Write("\tFör många misslyckade försök !" +
-                   " Försök igen om tio minuter\n\n\n\t\t[ {0} ]\t\t", seconds);
-                Thread.Sleep(1000);
-                seconds--;
-            }
             Console.Clear();
+            Console.CursorVisible = false;
+            Console.SetCursorPosition(8, 5);
+            Console.Write("Du matade in fel uppgifter 3 gånger!");
+            Console.SetCursorPosition(11, 6);
+            Console.Write("Programmet är nu låst i 1 min!");
+            Console.SetCursorPosition(10, 8);
+            Console.Write("╔══════════════════════════════╗");
+            Console.SetCursorPosition(10, 9);
+            Console.Write("║------------------------------║");
+            Console.SetCursorPosition(10, 10);
+            Console.Write("╚══════════════════════════════╝");
+            for (int i = 0; i < 30; i++)
+            {
+                Console.SetCursorPosition(i + 11, 9);
+                Console.Write("█");
+                Thread.Sleep(2000);
+            }
+            Console.CursorVisible = true;
         }
 
         static void CustomerMenu(User customer)
