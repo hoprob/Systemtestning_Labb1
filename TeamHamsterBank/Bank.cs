@@ -69,7 +69,7 @@ namespace TeamHamsterBank
                 Console.Write("\n\tFelaktig kod !\tVar god och " +
                                                "försök ingen: ");
                 if (attempts == 0)
-                {
+        {
                     LockOut();
                 }
             }
@@ -84,9 +84,9 @@ namespace TeamHamsterBank
             else if (user is Admin)
             {
                 AdminMenu(user)
-            }
+        }
             else
-            {
+        {
                 throw new Exception("Fel med klasstypen :(    Fixa !!!!!!!!!!!    ")
             }
         }
@@ -239,12 +239,12 @@ namespace TeamHamsterBank
                 Console.Write("   Ogiltigt namn! var god och försök igen\n\n"+
                     "\n\n   Skriv in fullständiga namn:  ");
                 username_input = Console.ReadLine().Trim());
-            }            
+        }
             
             Console.Write("\n\n   Skriv in ett lösenord:  ");
             password_input = Console.ReadLine().Trim();
             while (password_input.Length > 8)
-            {
+        {
                 Console.Write("   Lösenordet måste vara minst 8-tecken\n\n"+
                     "\n\n   Skriv in ett lösenord:  ");
                 password_input = Console.ReadLine().Trim());
@@ -255,7 +255,7 @@ namespace TeamHamsterBank
         {
             Console.Write("\n\n\n\t\tKlicka 'Enter' för att komma till huvudmenyn");
             Console.ReadLine();
-        }
+        }          
         
     }
 }
