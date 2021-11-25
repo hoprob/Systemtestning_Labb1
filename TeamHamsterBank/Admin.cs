@@ -17,6 +17,24 @@ namespace TeamHamsterBank
             int id = rnd.Next(100000, 999999);
             string userId = id.ToString();
 
+            // Check if user id is unique else generate a new id
+            bool isIdUnique = false;
+            do
+            {
+                foreach (var item in UsersList)
+                {
+                    if (item.UserID == userId)
+                    {
+                        id = rnd.Next(100000, 999999);
+                        userId = id.ToString();
+                    }
+                    else
+                    {
+                        isIdUnique = true;
+                    }
+                }
+            } while (isIdUnique == false);
+
             // Get full name
             Console.Write("Ange kundens fullständiga namn: ");
             string inputFullName = Console.ReadLine().Trim();
