@@ -8,11 +8,11 @@ namespace TeamHamsterBank
     class Admin:User
     {
         public Admin(string FullName, string UserId, string Password) : base(FullName, UserId, Password) { }
-        public static void CreateNewCustomer(List<User> UsersList)
+        public static void CreateNewCustomer(List<User> UsersList, List<Account> accounts)
         {
             Console.WriteLine("\t*** Skapa en ny användare ***\n");
 
-            // Generate user id
+            // Generate new user id
             Random rnd = new Random();
             int id = rnd.Next(100000, 999999);
             string userId = id.ToString();
@@ -21,9 +21,9 @@ namespace TeamHamsterBank
             bool isIdUnique = false;
             do
             {
-                foreach (var item in UsersList)
+                foreach (User user in UsersList)
                 {
-                    if (item.UserID == userId)
+                    if (user.UserID == userId)
                     {
                         id = rnd.Next(100000, 999999);
                         userId = id.ToString();
@@ -54,11 +54,43 @@ namespace TeamHamsterBank
                 inputPassword = Console.ReadLine().Trim();
             }
 
-            // New customer object
+            // Create a new customer object
             Customer newCustomer = new Customer(userId, inputFullName, inputPassword);
             UsersList.Add(newCustomer);
 
             Console.WriteLine($"\nNy användare {newCustomer.FullName} med ID {newCustomer.UserID} har skapats.");
+
+            CreateNewAccount(accounts);
+        }
+
+        public static void CreateNewAccount(List<Account> accounts)
+        {
+            // Generate new account number
+            Random rnd = new Random();
+            int accountNum = rnd.Next(100000000, 999999999);
+
+            // Check if account number is unique else generate a new account number
+            bool isNumUnique = false;
+            do
+            {
+                foreach (Account account in accounts)
+                {
+                    if (account.AccountNum == accountNum)
+                    {
+                        accountNum = rnd.Next(100000000, 999999999);
+                    }
+                    else
+                    {
+                        isNumUnique = true;
+                    }
+                }
+            } while (isNumUnique == false);
+
+            // Create a new Account object
+            Account newAccount = new Account("Huvudkonto", accountNum);
+            accounts.Add(newAccount);
+
+            Console.WriteLine($"Nytt konto har skapats med kontonummer {newAccount.AccountNum}");
         }
     }
 }

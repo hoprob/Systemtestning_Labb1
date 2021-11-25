@@ -9,6 +9,9 @@ namespace TeamHamsterBank
         string _accountName = "New Account";
         int _accountNum;
         decimal _balance;
+
+        public int AccountNum { get => _accountNum; }
+
         public Account(string accountName, int accountNum)
         {
             this._accountName = accountName;

@@ -171,7 +171,7 @@ namespace TeamHamsterBank
                 {
                     case 1:
                         Console.Clear();
-                        Admin.CreateNewCustomer(UsersList);
+                        Admin.CreateNewCustomer(UsersList, Customer.accounts);
                         Redirecting();
                         break;
                     case 2:
