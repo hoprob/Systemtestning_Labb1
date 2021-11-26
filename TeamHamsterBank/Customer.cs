@@ -19,14 +19,50 @@ namespace TeamHamsterBank
             Console.WriteLine("\t*** Skapa ett nytt konto ***\n");
 
             // Get account name
-            Console.Write("Vänligen ange kontonamn: ");
-            string accountName = Console.ReadLine().Trim();
+            Console.WriteLine("Vänligen ange kontonamn:\n" +
+                "  [1] Allkonto\n" +
+                "  [2] Sparkonto\n" +
+                "  [3] Framtidskonto\n" +
+                "  [4] Invesesteringskonto\n");
+
+            string accountName = String.Empty;
+            bool rerunSelection;
+
+            do
+            {
+                Console.Write("Välj kontonamn: ");
+                Int32.TryParse(Console.ReadLine(), out int select);
+
+                switch (select)
+                {
+                    case 1:
+                        accountName = "Allkonto         ";
+                        rerunSelection = false;
+                        break;
+                    case 2:
+                        accountName = "Sparkonto        ";
+                        rerunSelection = false;
+                        break;
+                    case 3:
+                        accountName = "Framtidskonto    ";
+                        rerunSelection = false;
+                        break;
+                    case 4:
+                        accountName = "Investeringskonto";
+                        rerunSelection = false;
+                        break;
+                    default:
+                        Console.WriteLine("Ogiltligt val. Vänligen ange nummer igen.\n");
+                        rerunSelection = true;
+                        break;
+                }
+            } while (rerunSelection);
 
             // Create a new account object and add to _accounts list
             Account newAccount = new Account(accountName);
             _accounts.Add(newAccount);
 
-            Console.WriteLine($"\nNytt konto {accountName} har skapats.");
+            Console.WriteLine($"\nNytt {accountName.Trim()} har skapats.");
         }
     }
 }

@@ -129,7 +129,7 @@ namespace TeamHamsterBank
                 Int32.TryParse(Console.ReadLine(), out int option);
                 switch (option)
                 {
-                    case 1:
+                    case 1: // View accounts and balance
                         Console.Clear();
                         Console.WriteLine(Account.PrintAccounts(customer));
                         Account.SelectAccount(customer, customer._accounts.Count);
