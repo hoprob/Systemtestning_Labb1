@@ -8,7 +8,8 @@ namespace TeamHamsterBank
     class Bank
     {
         internal static List<User> UsersList = new List<User>();
-        public static void WriteAccounts()
+                      // Objects for testing
+        public static void DeclareUsers()
         {
                                      //    _user_ID  , _fullName ,  _password                  
             UsersList.Add(new Admin("111111", "Robin Svensson", "password"));
@@ -18,6 +19,22 @@ namespace TeamHamsterBank
             UsersList.Add(new Customer("555555", "Allen Lee", "password"));
             UsersList.Add(new Customer("666666", "Mike Jefferson", "password"));
             UsersList.Add(new Customer("777777", "Alfred Kaiser", "password"));
+        }
+                // Adding accounts to the test-objects for testing.
+                // All customers are getting the same acount details.
+        public static void AddAccounts()
+        {
+            foreach (User user in UsersList)
+            {
+                if (user is Customer)
+                {
+                    Customer customer =  user as Customer;
+                    customer._accounts.Add(new Account("Allkonto         ", 50000));
+                    customer._accounts.Add(new Account("Sparkonto_       ", 120000));
+                    customer._accounts.Add(new Account("Framtidskonto    ", 15000));
+                    customer._accounts.Add(new Account("Investeringskonto", 30000));
+                }
+            }
         }
         public static void Login()
         {
@@ -93,27 +110,29 @@ namespace TeamHamsterBank
             Console.Clear();
         }
 
-        static void CustomerMenu(User customer)
+        static void CustomerMenu(User user)
         {
+            Customer customer = user as Customer;
             bool run = true;
             while (run)
             {
                 Console.Clear();
                 Console.Write("\n\t\t* (( Välkommen {0}" +
                                                                   " )) * \n\n" +
-                    "  [1] Se dina konton och saldo \n\n" +
+                    "  [1] konton och saldo \n\n" +
                     "  [2]  \n\n" +
                     "  [3]  \n\n" +
                     "  [4]  \n\n" +
                     "  [5] Öppna ett nytt konto \n\n" +
                     "  [6] Logga ut \n\n" +
-                    "   \tVälj:  ", customer.FullName);
+                    "   \tVälj:  ", user.FullName);
                 Int32.TryParse(Console.ReadLine(), out int option);
                 switch (option)
                 {
                     case 1:
                         Console.Clear();
-                        // Account details - method  
+                        Console.WriteLine(Account.PrintAccounts(customer));
+                        Account.SelectAccount(customer, customer._accounts.Count);
                         Redirecting();
                         break;
                     case 2:
