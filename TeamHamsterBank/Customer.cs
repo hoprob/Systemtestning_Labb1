@@ -12,10 +12,21 @@ namespace TeamHamsterBank
 
         }
         int customerId;
-        List<Account> accounts;
-        private void CreateNewAccount()
-        {
+        internal List<Account> _accounts = new List<Account>();
 
+        public void CreateNewAccount()
+        {
+            Console.WriteLine("\t*** Skapa ett nytt konto ***\n");
+
+            // Get account name
+            Console.Write("Vänligen ange kontonamn: ");
+            string accountName = Console.ReadLine().Trim();
+
+            // Create a new account object and add to _accounts list
+            Account newAccount = new Account(accountName);
+            _accounts.Add(newAccount);
+
+            Console.WriteLine($"\nNytt konto {accountName} har skapats.");
         }
     }
 }

@@ -8,7 +8,7 @@ namespace TeamHamsterBank
     class Admin:User
     {
         public Admin(string FullName, string UserId, string Password) : base(FullName, UserId, Password) { }
-        public static void CreateNewCustomer(List<User> UsersList, List<Account> accounts)
+        public static void CreateNewCustomer(List<User> UsersList)
         {
             Console.WriteLine("\t*** Skapa en ny användare ***\n");
 
@@ -54,43 +54,14 @@ namespace TeamHamsterBank
                 inputPassword = Console.ReadLine().Trim();
             }
 
-            // Create a new customer object
+            // Create a new customer object and add to UsersList
             Customer newCustomer = new Customer(userId, inputFullName, inputPassword);
             UsersList.Add(newCustomer);
 
-            Console.WriteLine($"\nNy användare {newCustomer.FullName} med ID {newCustomer.UserID} har skapats.");
+            Console.WriteLine($"\nNy användare {newCustomer.FullName} med ID {newCustomer.UserID} har skapats.\n");
 
-            CreateNewAccount(accounts);
-        }
-
-        public static void CreateNewAccount(List<Account> accounts)
-        {
-            // Generate new account number
-            Random rnd = new Random();
-            int accountNum = rnd.Next(100000000, 999999999);
-
-            // Check if account number is unique else generate a new account number
-            bool isNumUnique = false;
-            do
-            {
-                foreach (Account account in accounts)
-                {
-                    if (account.AccountNum == accountNum)
-                    {
-                        accountNum = rnd.Next(100000000, 999999999);
-                    }
-                    else
-                    {
-                        isNumUnique = true;
-                    }
-                }
-            } while (isNumUnique == false);
-
-            // Create a new Account object
-            Account newAccount = new Account("Huvudkonto", accountNum);
-            accounts.Add(newAccount);
-
-            Console.WriteLine($"Nytt konto har skapats med kontonummer {newAccount.AccountNum}");
+            // Create new account for new user
+            newCustomer.CreateNewAccount();
         }
     }
 }
