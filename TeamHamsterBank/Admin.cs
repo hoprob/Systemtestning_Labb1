@@ -38,7 +38,7 @@ namespace TeamHamsterBank
             // Get full name
             Console.Write("Ange kundens fullständiga namn: ");
             string inputFullName = Console.ReadLine().Trim();
-            while (inputFullName.Any(char.IsNumber) || inputFullName.Length < 2)
+            while (inputFullName.Any(char.IsNumber) || inputFullName.Length < 6)
             {
                 Console.Write("\nOglitligt namn. Ange ett fullständigt namn: ");
                 inputFullName = Console.ReadLine().Trim();
