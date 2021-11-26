@@ -150,9 +150,9 @@ namespace TeamHamsterBank
                         // Withdrawal method  ??
                         Redirecting();
                         break;
-                    case 5:
+                    case 5: // Create new account as customer
                         Console.Clear();
-                        // Open new account method  ??
+                        customer.CreateNewAccount();
                         Redirecting();
                         break;
                     case 6:
@@ -188,7 +188,7 @@ namespace TeamHamsterBank
                 Int32.TryParse(Console.ReadLine(), out int option);
                 switch (option)
                 {
-                    case 1:
+                    case 1: // Create a new customer and account as Admin
                         Console.Clear();
                         Admin.CreateNewCustomer(UsersList);
                         Redirecting();
