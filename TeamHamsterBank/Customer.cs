@@ -12,9 +12,7 @@ namespace TeamHamsterBank
 
         }
         int customerId;
-
-        internal static List<Account> accounts = new List<Account>();
-
+        List<Account> accounts;
         private void CreateNewAccount()
         {
 
