@@ -128,6 +128,7 @@ namespace TeamHamsterBank
                     case 2:
                         Console.Clear();
                         // Transfer method  ??
+                        InternalTransfer(customer as Customer);//TODO ändra vart man referear till Customer class!
                         Redirecting();
                         break;
                     case 3:
@@ -159,7 +160,63 @@ namespace TeamHamsterBank
                 }
             }
         }
-
+        static void InternalTransfer(Customer customer)
+        {
+            int transferFrom;
+            int transferTo;
+            decimal transferSum;
+            bool transferBool = true;
+            do
+            {
+                Console.WriteLine("Vilket konto vill du föra över ifrån?");
+                //TODO Print accounts
+                if (Int32.TryParse(Console.ReadLine(), out transferFrom)
+                    && transferFrom <= customer.Accounts.Count() && transferFrom > 0)
+                {
+                    Console.WriteLine("Vilket konto vill du överföra till?");
+                    //TODO Print accounts
+                    if (Int32.TryParse(Console.ReadLine(), out transferTo) &&
+                        transferFrom <= customer.Accounts.Count() && transferFrom > 0
+                        && transferFrom != transferTo)
+                    {
+                        do
+                        {
+                            Console.Write("Hur mycket vill du föra över?: ");
+                            if (Decimal.TryParse(Console.ReadLine(), out transferSum))
+                            {
+                                if (customer.Accounts[transferFrom].EnoughBalance(transferSum))
+                                {
+                                    customer.Accounts[transferFrom].MakeTransfer(transferSum, customer.Accounts[transferTo]);
+                                    Console.Clear();
+                                    Console.WriteLine("Överföring genomförd!\nNya saldon är: ");
+                                    //TODO Print transfered accounts.
+                                    transferBool = false;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Du har inte tillräckligt med pengar på kontot!\nFörsök med en mindre summa!");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Ogiltlig inmatning! Skriv in summa med siffror!");
+                                transferBool = true;
+                            }
+                        } while (transferBool);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Ogiltligt val!");
+                        transferBool = true;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Ogiltligt val!");
+                    transferBool = true;
+                }
+            } while (transferBool);          
+        }
         static void AdminMenu(User admin)
         {
             bool run = true;

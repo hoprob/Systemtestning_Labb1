@@ -19,5 +19,10 @@ namespace TeamHamsterBank
         {
             return checkSum > _balance;
         }
+        public void MakeTransfer(decimal transferSum, Account toAccount)
+        {
+            this._balance -= transferSum;   
+            toAccount._balance += transferSum;
+        }
     }
 }
