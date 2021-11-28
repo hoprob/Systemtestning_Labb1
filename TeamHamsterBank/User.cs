@@ -8,31 +8,32 @@ namespace TeamHamsterBank
     {
         private string _fullName;
         private string _userId;
-        private string _passWord;
+        private string _password;
 
         public string FullName { get => _fullName; }
         public string UserID { get => _userId; }
-
 
         public User(string UserId, string FullName, string Password)
         {
             _userId = UserId;
             _fullName = FullName;
-            _passWord = Password;
+            _password = Password;
         }
 
         public static bool CheckUserName(List<User> users, string inputId)
         {
             return users.Exists(u => u._userId == inputId);
         }
-        public static User CheckPassWord(List<User> users, string inputId, string inputPassWord)
+        public static User CheckPassword(List<User> users, string inputId, string inputPassword)
         {
             var user = users.Find(u => u._userId == inputId);
-            if (user._passWord == inputPassWord)
+            if (user._password == inputPassword)
                 return user;
             else
                 return null;
         }
+        public static bool CheckPassword(Customer customer, string inputPassword)
+            => (customer._password == inputPassword);
 
     }
 }
