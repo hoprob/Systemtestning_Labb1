@@ -13,7 +13,6 @@ namespace TeamHamsterBank
         {
 
         }
-        int customerId;
         internal List<Account> _accounts = new List<Account>();
 
         public void CreateNewAccount()
