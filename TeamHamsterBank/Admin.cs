@@ -36,21 +36,21 @@ namespace TeamHamsterBank
             } while (isIdUnique == false);
 
             // Get full name
-            Console.Write("Ange kundens fullständiga namn: ");
+            Console.Write("  Ange kundens fullständiga namn: ");
             string inputFullName = Console.ReadLine().Trim();
             while (inputFullName.Any(char.IsNumber) || inputFullName.Length < 6)
             {
-                Console.Write("\nOglitligt namn. Ange ett fullständigt namn: ");
+                Console.Write("\n  Oglitligt namn. Ange ett fullständigt namn: ");
                 inputFullName = Console.ReadLine().Trim();
             }
 
             // Get password
-            Console.Write("Ange ett lösenord: ");
+            Console.Write("  Ange ett lösenord: ");
             string inputPassword = Console.ReadLine().Trim();
             while (inputPassword.Length < 8)
             {
-                Console.WriteLine("\nLösenordet måste vara minst 8 tecken. Vänligen ange ett annat lösenord.");
-                Console.Write("Ange ett lösenord:");
+                Console.WriteLine("\n  Lösenordet måste vara minst 8 tecken. Vänligen ange ett annat lösenord.");
+                Console.Write("  Ange ett lösenord:");
                 inputPassword = Console.ReadLine().Trim();
             }
 
@@ -58,7 +58,7 @@ namespace TeamHamsterBank
             Customer newCustomer = new Customer(userId, inputFullName, inputPassword);
             UsersList.Add(newCustomer);
 
-            Console.WriteLine($"\nNy användare {newCustomer.FullName} med ID {newCustomer.UserID} har skapats.\n");
+            Console.WriteLine($"\n  Ny användare {newCustomer.FullName} med ID {newCustomer.UserID} har skapats.\n");
 
             // Create new account for new user
             newCustomer.CreateNewAccount();

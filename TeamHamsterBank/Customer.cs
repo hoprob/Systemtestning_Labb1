@@ -20,7 +20,7 @@ namespace TeamHamsterBank
             Console.WriteLine("\t*** Skapa ett nytt konto ***\n");
 
             // Options for account name
-            Console.WriteLine("  Vänligen ange kontonamn:\n\n" +
+            Console.WriteLine("  Vänligen ange kontotyp:\n\n" +
                 "  [1] Allkonto\n" +
                 "  [2] Sparkonto\n" +
                 "  [3] Framtidskonto\n" +
@@ -32,7 +32,7 @@ namespace TeamHamsterBank
             // Select account name
             do
             {
-                Console.Write("\tKontonamn: ");
+                Console.Write("\tKontotyp: ");
                 Int32.TryParse(Console.ReadLine(), out int slctAccount);
 
                 switch (slctAccount)
@@ -54,11 +54,16 @@ namespace TeamHamsterBank
                         rerunSelection = false;
                         break;
                     default:
-                        Console.WriteLine("Ogiltligt val. Vänligen ange nummer igen.\n");
+                        Console.WriteLine("  Ogiltligt val. Vänligen ange nummer igen.\n");
                         rerunSelection = true;
                         break;
                 }
             } while (rerunSelection);
+
+            Console.Clear();
+            Console.WriteLine($"\n  {accountName.Trim()} har valts.");
+            Console.Write("\n  Vänligen ange kontonamn: ");
+            string nameAccount = Console.ReadLine().Trim();
 
             // Options for account name
             Console.WriteLine("\n  Vänligen ange valuta:\n\n" +
@@ -103,7 +108,8 @@ namespace TeamHamsterBank
             Account newAccount = new Account(accountName, currency);
             _accounts.Add(newAccount);
 
-            Console.WriteLine($"\nNytt {accountName.Trim()} har skapats med valuta {currency}.");
+            Console.Clear();
+            Console.WriteLine($"\nNytt {accountName.Trim()}, {nameAccount}, har skapats med valuta {currency}.");
         }
         
     }
