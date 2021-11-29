@@ -152,6 +152,7 @@ namespace TeamHamsterBank
                         break;
                     case 2: // Transfer money
                         Console.Clear();
+                        InternalTransfer(customer);
                         Redirecting();
                         break;
                     case 3: // Deposit
