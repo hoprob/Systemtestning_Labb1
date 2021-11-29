@@ -6,12 +6,13 @@ namespace TeamHamsterBank
 {
     class Customer : User
     {
+        int customerId;
+        List<Account> accounts;
         public Customer(string UserId, string FullName, string Password)
-         :base(UserId, FullName, Password)
+         : base(UserId, FullName, Password)
         {
 
         }
-        int customerId;
         internal List<Account> _accounts = new List<Account>();
 
         public void CreateNewAccount()
