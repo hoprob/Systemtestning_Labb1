@@ -104,16 +104,25 @@ namespace TeamHamsterBank
 
         static void LockOut()
         {
-            int seconds = 600;
-            while (seconds >= 0)
-            {
-                Console.Clear();
-                Console.Write("\tFör många misslyckade försök !" +
-                   " Försök igen om tio minuter\n\n\n\t\t[ {0} ]\t\t", seconds);
-                Thread.Sleep(1000);
-                seconds--;
-            }
             Console.Clear();
+            Console.CursorVisible = false;
+            Console.SetCursorPosition(8, 5);
+            Console.Write("Du matade in fel uppgifter 3 gånger!");
+            Console.SetCursorPosition(11, 6);
+            Console.Write("Programmet är nu låst i 1 min!");
+            Console.SetCursorPosition(10, 8);
+            Console.Write("╔══════════════════════════════╗");
+            Console.SetCursorPosition(10, 9);
+            Console.Write("║------------------------------║");
+            Console.SetCursorPosition(10, 10);
+            Console.Write("╚══════════════════════════════╝");
+            for (int i = 0; i < 30; i++)
+            {
+                Console.SetCursorPosition(i + 11, 9);
+                Console.Write("█");
+                Thread.Sleep(2000);
+            }
+            Console.CursorVisible = true;
         }
 
         static void CustomerMenu(User user)
@@ -126,7 +135,7 @@ namespace TeamHamsterBank
                 Console.Write("\n\t\t* (( Välkommen {0}" +
                                                                   " )) * \n\n" +
                     "  [1] Konton och saldo \n\n" +
-                    "  [2]  \n\n" +
+                    "  [2] Överföring mellan egna konton\n\n" +
                     "  [3] Sätt in pengar \n\n" +
                     "  [4] Ta ut pengar \n\n" +
                     "  [5] Öppna ett nytt konto \n\n" +
@@ -262,6 +271,78 @@ namespace TeamHamsterBank
                                                    "försök ingen: ");
             }
             return valid;
+        }
+        static void InternalTransfer(Customer customer)
+        {
+            int transferFrom;
+            int transferTo;
+            decimal transferSum;
+            bool transferBool = true;
+            do
+            {
+                Console.WriteLine("Vilket konto vill du föra över FRÅN?");
+                Console.WriteLine(Account.PrintAccounts(customer));
+                Console.Write("\n\tVälj: ");
+                if (Int32.TryParse(Console.ReadLine(), out transferFrom)
+                    && transferFrom <= customer._accounts.Count() && transferFrom > 0)
+                {
+                    transferFrom--;
+                    Console.Clear();
+                    do
+                    {
+                        Console.WriteLine("Vilket konto vill du överföra TILL?");
+                        Console.WriteLine(Account.PrintAccounts(customer));
+                        Console.Write("\n\tVälj: ");
+                        if (Int32.TryParse(Console.ReadLine(), out transferTo) &&
+                            transferTo <= customer._accounts.Count() && transferTo > 0
+                            && transferFrom + 1 != transferTo)
+                        {
+                            transferTo--;
+                            Console.Clear();
+                            do
+                            {
+                                Console.Write("\n\tHur mycket vill du föra över?: ");
+                                if (Decimal.TryParse(Console.ReadLine(), out transferSum))
+                                {
+                                    if (customer._accounts[transferFrom].EnoughBalance(transferSum))
+                                    {
+                                        customer._accounts[transferFrom].MakeTransfer(transferSum, customer._accounts[transferTo]);
+                                        Console.Clear();
+                                        Console.WriteLine("\nÖverföring genomförd!\n\nNya saldon är: \n");
+                                        Console.WriteLine(customer._accounts[transferFrom]);
+                                        Console.WriteLine(customer._accounts[transferTo]);
+                                        transferBool = false;
+                                    }
+                                    else
+                                    {
+                                        Console.Clear();
+                                        Console.WriteLine("\n\tDu har inte tillräckligt med pengar på kontot!\n\tFörsök med en mindre summa!\n");
+                                        transferBool = true;
+                                    }
+                                }
+                                else
+                                {
+                                    Console.Clear();
+                                    Console.WriteLine("\n\tOgiltlig inmatning! Skriv in summa med siffror!\n");
+                                    transferBool = true;
+                                }
+                            } while (transferBool);
+                        }
+                        else
+                        {
+                            Console.Clear();
+                            Console.WriteLine("\n\tOgiltligt val! Försök igen!\n");
+                            transferBool = true;
+                        }
+                    } while (transferBool);
+                }
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine("\n\tOgiltligt val! Försök igen!\n");
+                    transferBool = true;
+                }
+            } while (transferBool);
         }
         static void AdminMenu(User admin)
         {
