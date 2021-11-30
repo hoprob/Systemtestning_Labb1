@@ -56,7 +56,7 @@ namespace TeamHamsterBank
         } 
         public bool EnoughBalance(decimal checkSum)
         {
-            return checkSum < _balance;
+            return checkSum <= _balance;
         }
         public void MakeTransfer(decimal transferSum, Account toAccount)
         {
