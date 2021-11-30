@@ -6,7 +6,8 @@ namespace TeamHamsterBank
 {
     class Account
     {
-        private string _accountName = "New Account";
+        private string _accountType = "New Account";
+        private string _accountName = "Konto";
         private decimal _balance;
         internal decimal Balance
         {
@@ -22,23 +23,28 @@ namespace TeamHamsterBank
         internal int AccountNumber { get  => _accountNum;  }
         private string _customerID;
         internal string CustomerID { get => _customerID; }
+
+        public static List<string> CurrencyList = new List<string>() { "SEK", "EUR", "GBP", "USD"}; // List of available currencies in the bank
+        
         private List<string[]> _transaction = new List<string[]>();
         //This Constructor will only be called when the app starts to
         // declare the accounts that already exist.
-        public Account(string accountName, decimal balance, string currency, string customerID)
+        public Account(string accountName, string accountType, decimal balance, string currency, string customerID)
         {
             _staticAccountNum++;
             _accountName = accountName;
+            _accountType = accountType;
             _accountNum = _staticAccountNum;
             _balance = balance;
             _currency = currency;
             _customerID = customerID;
         }
         // This constructer will be called by the customer-object to open a new accounnt
-        public Account(string accountName, string currency, string customerID)
+        public Account(string accountName, string accountType, string currency, string customerID)
         {
             _staticAccountNum++;
             _accountName = accountName;
+            _accountType = accountType;
             _accountNum = _staticAccountNum;
             _balance = 0.00m;
             _currency=currency;
@@ -47,12 +53,12 @@ namespace TeamHamsterBank
         public string ToSave()
         {
 
-            return $"{_accountName}________{_accountNum}________{_balance}" +
+            return $"{_accountName}________{_accountType}________{_accountNum}________{_balance}" +
                    $"________{_currency}________{_customerID}\n";
         }
         public override string ToString()
         {
-            return $"{_accountName}    KontoNr: [{_accountNum}]" +
+            return $"{_accountName}    Kontotyp: [{_accountType}]    KontoNr: [{_accountNum}]" +
                    $"    Saldo: {_balance:0.00}    {_currency}\n\n";
         }
         public static string PrintAccounts(Customer customer)
@@ -99,6 +105,14 @@ namespace TeamHamsterBank
         {
             this._balance -= transferSum;
             toAccount._balance += transferSum;
+        }
+        public static void PrintCurrencies() // Prints available currencies in the bank
+        {
+            Console.WriteLine("  * Tillgängliga valutor *\n");
+            foreach (string currency in CurrencyList)
+            {
+                Console.WriteLine($"    [{currency}]");
+            }
         }
     }
 }

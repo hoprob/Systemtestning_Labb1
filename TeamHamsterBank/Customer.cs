@@ -20,7 +20,7 @@ namespace TeamHamsterBank
                 if (_userId == account[4])
                 {
                     _accounts.Add(new Account(account[0],
-                    Decimal.Parse(account[2]), account[3], account[4]));
+                    account[1], Decimal.Parse(account[3]), account[4], account[5]));
                 }
             }
         }
@@ -28,91 +28,90 @@ namespace TeamHamsterBank
         {
             Console.WriteLine("\t*** Skapa ett nytt konto ***\n");
 
-            // Options for account name
-            Console.WriteLine("  Vänligen ange kontonamn:\n\n" +
+            // Options for account type
+            Console.WriteLine("  Vänligen ange kontotyp:\n\n" +
                 "  [1] Allkonto\n" +
                 "  [2] Sparkonto\n" +
                 "  [3] Framtidskonto\n" +
                 "  [4] Investeringskonto\n");
 
-            string accountName = String.Empty;
+            string accountType = String.Empty;
             bool rerunSelection;
 
-            // Select account name
+            // Select account type
             do
             {
-                Console.Write("\tKontonamn: ");
+                Console.Write("\tKontotyp: ");
                 Int32.TryParse(Console.ReadLine(), out int slctAccount);
 
                 switch (slctAccount)
                 {
                     case 1:
-                        accountName = "Allkonto         ";
+                        accountType = "Allkonto         ";
                         rerunSelection = false;
                         break;
                     case 2:
-                        accountName = "Sparkonto        ";
+                        accountType = "Sparkonto        ";
                         rerunSelection = false;
                         break;
                     case 3:
-                        accountName = "Framtidskonto    ";
+                        accountType = "Framtidskonto    ";
                         rerunSelection = false;
                         break;
                     case 4:
-                        accountName = "Investeringskonto";
+                        accountType = "Investeringskonto";
                         rerunSelection = false;
                         break;
                     default:
-                        Console.WriteLine("Ogiltligt val. Vänligen ange nummer igen.\n");
+                        Console.WriteLine("\n  Ogiltligt val. Vänligen ange nummer igen.\n");
                         rerunSelection = true;
                         break;
                 }
             } while (rerunSelection);
 
-            // Options for account name
-            Console.WriteLine("\n  Vänligen ange valuta:\n\n" +
-                "  [1] [SEK]\n" +
-                "  [2] [EUR]\n" +
-                "  [3] [GBP]\n" +
-                "  [4] [USD]\n");
-
-            string currency = String.Empty;
-
+            Console.Clear();
+            Console.WriteLine($"\n  {accountType.Trim()} har valts.");
+            // Get name for new account
+            string accountName = String.Empty;
             do
             {
-                Console.Write("\tValuta: ");
-                Int32.TryParse(Console.ReadLine(), out int slctCurrency);
+                Console.Write("\n  Vänligen ange kontonamn: ");
+                accountName = Console.ReadLine().Trim();
 
-                switch (slctCurrency)
+                if (accountName.Length > 15)
                 {
-                    case 1:
-                        currency = "[SEK]";
-                        rerunSelection = false;
-                        break;
-                    case 2:
-                        currency = "[EUR]";
-                        rerunSelection = false;
-                        break;
-                    case 3:
-                        currency = "[GBP]";
-                        rerunSelection = false;
-                        break;
-                    case 4:
-                        currency = "[USD]";
-                        rerunSelection = false;
-                        break;
-                    default:
-                        Console.WriteLine("Ogiltligt val. Vänligen ange nummer igen.\n");
-                        rerunSelection = true;
-                        break;
+                    Console.WriteLine("  Kontonamnet är för långt.");
                 }
-            } while (rerunSelection);
+            } while (accountName.Length > 15);
+
+            // Get currency for new account
+            Console.Write("\n  Vänligen ange valuta för kontot: ");
+            string inputCurrency = string.Empty;
+            string currency = String.Empty;
+            do
+            {
+                inputCurrency = Console.ReadLine().Trim().ToUpper(); // Input currency
+
+                if (inputCurrency.Length != 3 || !(Account.CurrencyList.Contains(inputCurrency)))
+                {
+                    Console.Clear();
+                    Console.WriteLine("\n  Oglitligt val. Vänligen ange valuta med tre bokstäver.\n");
+                    Account.PrintCurrencies();
+                    Console.Write("\n  Välj: ");
+                }
+                else
+                {
+                    currency = inputCurrency; // Set currency
+                }
+            } while (inputCurrency.Length != 3 || !(Account.CurrencyList.Contains(inputCurrency)));
 
             // Create a new account object and add to _accounts list
-            Account newAccount = new Account(accountName, currency, _userId);
+            Account newAccount = new Account(accountName, accountType, currency, _userId);
             _accounts.Add(newAccount);
 
-            Console.WriteLine($"\nNytt {accountName.Trim()} har skapats med valuta {currency}.");
+            // Print details of new account
+            Console.Clear();
+            Console.WriteLine($"\n  Nytt {accountType.Trim()}, {accountName}, har skapats med valuta [{currency}].");
         }
         
     }
