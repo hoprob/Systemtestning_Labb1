@@ -107,7 +107,7 @@ namespace TeamHamsterBank
                 Console.Write("\n\t\t* (( Välkommen {0}" +
                                                                   " )) * \n\n" +
                     "  [1] Konton och saldo \n\n" +
-                    "  [2] Överföring mellan egna konton\n\n" +
+                    "  [2] Överföring\n\n" +
                     "  [3] Sätt in pengar \n\n" +
                     "  [4] Ta ut pengar \n\n" +
                     "  [5] Öppna ett nytt konto \n\n" +
@@ -123,8 +123,17 @@ namespace TeamHamsterBank
                         Redirecting();
                         break;
                     case 2: // Transfer money
-                        Console.Clear();
-                        InternalTransfer(customer);
+                        string input;
+                        do
+                        {
+                            Console.Clear();
+                            Console.WriteLine("\n\t\tVilken typ av överföring vill du göra?");
+                            Console.WriteLine("\n\n[1] Till eget konto\n\n[2] Till externt konto\n\n[3] Avbryt");
+                            Console.Write("\n\n\tVälj: ");
+                            input = Console.ReadLine();
+                        } while (input != "1" && input != "2" && input != "3");
+                        if(input == "1") { InternalTransfer(customer); }
+                        else if (input == "2") { ExternalTransfer(customer); }                        
                         Redirecting();
                         break;
                     case 3: // Deposit
@@ -252,13 +261,15 @@ namespace TeamHamsterBank
             int transferTo;
             decimal transferSum;
             bool transferBool = true;
+            Console.Clear();
             do
             {
                 Console.WriteLine("Vilket konto vill du föra över FRÅN?");
                 Console.WriteLine(Account.PrintAccounts(customer));
                 Console.Write("\n\tVälj: ");
                 if (Int32.TryParse(Console.ReadLine(), out transferFrom)
-                    && transferFrom <= customer._accounts.Count() && transferFrom > 0)
+                    && transferFrom <= customer._accounts.Count() &&
+                    transferFrom > 0)
                 {
                     transferFrom--;
                     Console.Clear();
@@ -268,7 +279,8 @@ namespace TeamHamsterBank
                         Console.WriteLine(Account.PrintAccounts(customer));
                         Console.Write("\n\tVälj: ");
                         if (Int32.TryParse(Console.ReadLine(), out transferTo) &&
-                            transferTo <= customer._accounts.Count() && transferTo > 0
+                            transferTo <= customer._accounts.Count()
+                            && transferTo > 0
                             && transferFrom + 1 != transferTo)
                         {
                             transferTo--;
@@ -276,28 +288,43 @@ namespace TeamHamsterBank
                             do
                             {
                                 Console.Write("\n\tHur mycket vill du föra över?: ");
-                                if (Decimal.TryParse(Console.ReadLine(), out transferSum))
+                                if (Decimal.TryParse(Console.ReadLine(),
+                                    out transferSum))
                                 {
-                                    if (customer._accounts[transferFrom].EnoughBalance(transferSum))
+                                    if (customer._accounts[transferFrom].
+                                        EnoughBalance(transferSum))
                                     {
-                                        customer._accounts[transferFrom].MakeTransfer(transferSum, customer._accounts[transferTo]);
+                                        customer._accounts[transferFrom].
+                                            MakeTransfer(transferSum,
+                                            customer._accounts[transferTo]);
                                         Console.Clear();
-                                        Console.WriteLine("\nÖverföring genomförd!\n\nNya saldon är: \n");
-                                        Console.WriteLine(customer._accounts[transferFrom]);
-                                        Console.WriteLine(customer._accounts[transferTo]);
+                                        Console.WriteLine("\nÖverföring genomförd!" +
+                                            "\n\nNya saldon är: \n");
+                                        Console.WriteLine(customer.
+                                            _accounts[transferFrom]);
+                                        Console.WriteLine(customer.
+                                            _accounts[transferTo]);
+                                        Account.SubmitTransaction(customer,
+                                            transferFrom, transferSum);
+                                        Account.SubmitTransaction(customer,
+                                            transferTo, transferSum);
                                         transferBool = false;
                                     }
                                     else
                                     {
                                         Console.Clear();
-                                        Console.WriteLine("\n\tDu har inte tillräckligt med pengar på kontot!\n\tFörsök med en mindre summa!\n");
+                                        Console.WriteLine("\n\tDu har inte" +
+                                            " tillräckligt med pengar på kontot!" +
+                                            $"\n\tDu kan max föra över" +
+                                            $" {customer._accounts[transferFrom].Balance}!\n");
                                         transferBool = true;
                                     }
                                 }
                                 else
                                 {
                                     Console.Clear();
-                                    Console.WriteLine("\n\tOgiltlig inmatning! Skriv in summa med siffror!\n");
+                                    Console.WriteLine("\n\tOgiltlig inmatning!" +
+                                        " Skriv in summa med siffror!\n");
                                     transferBool = true;
                                 }
                             } while (transferBool);
@@ -382,6 +409,164 @@ namespace TeamHamsterBank
         {
             Console.Write("\n\n\n\t\tKlicka 'Enter' för att komma till huvudmenyn");
             Console.ReadLine();
-        }          
+        }
+        public static void ExternalTransfer(Customer customer)
+        {
+            int toAccountNum;
+            Customer toCustomer = null;
+            Account toAccount = null;
+            string input;
+            bool transferBool;
+            Console.Clear();
+            ReturnInstruction(0);
+            do
+            {
+                //Gets account number to transfer to
+                transferBool = true;              
+                Console.Write("\n\n\tSkriv in vilket kontonummer du vill" +
+                    " överföra TILL: ");
+                input = Console.ReadLine();
+                if (Int32.TryParse(input, out toAccountNum) && input.Length == 9)
+                {
+                    /*Gets list of customers from UsersList and
+                     * checks if accountnumber exists*/
+                    List<User> customerList = UsersList.FindAll(u => u is Customer);
+                    foreach (User user in customerList)
+                    {
+                        toCustomer = user as Customer;
+                        for (int i = 0; i < toCustomer._accounts.Count; i++)
+                        {
+                            if (toCustomer._accounts[i].AccountNumber == toAccountNum)
+                            {
+                                //Saves found account in object.
+                                toAccount = toCustomer._accounts[i];
+                                break;
+                            }
+                        }
+                        //If toAccount not equals null, we got a searchresult!
+                        if (toAccount != null) { break; }
+                    }
+                    if (toAccount != null)
+                    {
+                        Console.Clear();
+                        ReturnInstruction(customer._accounts.Count + 3);
+                        //Gets account to transfer from
+                        do
+                        {
+                            int fromAccount;
+                            Console.WriteLine($"\n\n\tKontonummer: [{toAccountNum}]" +
+                                $" tillhör [{toCustomer.FullName}]");                            
+                            Console.WriteLine("\n\n\tVälj vilket konto du vill" +
+                                " överföra FRÅN:");
+                            Console.WriteLine(Account.PrintAccounts(customer));                            
+                            Console.Write("\n\tVälj: ");
+                            input = Console.ReadLine();
+                            if (Int32.TryParse(input, out fromAccount) &&
+                                fromAccount <= customer._accounts.Count() &&
+                                fromAccount > 0)
+                            {
+                                fromAccount--;
+                                Console.Clear();
+                                ReturnInstruction(0);
+                                //Gets transferSum
+                                do
+                                {
+                                    decimal transferSum;                                    
+                                    Console.Write("\n\n\tHur mycket vill du föra" +
+                                        " över?: ");
+                                    input = Console.ReadLine();
+                                    if (Decimal.TryParse(input,
+                                        out transferSum) && transferSum > 0)
+                                    {
+                                        if (customer._accounts[fromAccount].
+                                            EnoughBalance(transferSum))
+                                        {
+                                            Console.Clear();
+                                            //Verifies customer with password
+                                            if(VerifyCustomer(customer))
+                                            {
+                                                //Makes transfer and prints to log.
+                                                customer._accounts[fromAccount].
+                                                MakeTransfer(transferSum,
+                                                toAccount);
+                                                Console.Clear();
+                                                Console.WriteLine("\nÖverföring " +
+                                                    "genomförd!\n\nNytt saldo är:\n");
+                                                Console.WriteLine(customer.
+                                                    _accounts[fromAccount]);
+                                                Account.SubmitTransaction(customer,
+                                                    fromAccount, transferSum);
+                                                Account.SubmitTransaction(toCustomer,
+                                                    toCustomer._accounts.FindIndex
+                                                    (a => a.Equals(toAccount)),
+                                                    transferSum);
+                                                transferBool = false;
+                                            } 
+                                            else { transferBool = false; }
+                                        }
+                                        else if(input.ToUpper() == "R")
+                                            transferBool = false;
+                                        else
+                                        {
+                                            Console.Clear();
+                                            ReturnInstruction(0);
+                                            Console.WriteLine("\n\tDu har inte" +
+                                                " tillräckligt med pengar på kontot!" +
+                                                "\n\tDu kan max föra över" +
+                                                $" {customer._accounts[fromAccount].Balance}" +
+                                                $"!\n");
+                                            transferBool = true;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Console.Clear();
+                                        ReturnInstruction(0);
+                                        Console.WriteLine("\n\tOgiltlig inmatning!" +
+                                            " Skriv in summa med siffror!\n");
+                                        transferBool = true;
+                                    }
+                                } while (transferBool);
+                            }
+                            else if (input.ToUpper() == "R")
+                                transferBool = false; 
+                            else
+                            {
+                                Console.Clear();
+                                ReturnInstruction(customer._accounts.Count + 3);
+                                Console.WriteLine("\n\tOgiltligt val! Försök igen!\n");
+                                transferBool = true;
+                            }
+                        } while (transferBool);
+                        
+                    }
+                    else if (input.ToUpper() == "R") { transferBool = false; }
+                    else
+                    {
+                        Console.Clear();
+                        ReturnInstruction(0);
+                        Console.WriteLine($"\n\n\t\tKontonummer: {toAccountNum}," +
+                            $" går Ej att hitta!\n\t\tVar vänlig försök med" +
+                            $" annat kontonummer!\n");
+                        transferBool = true;
+                    }
+                }
+                else if (input.ToUpper() =="R") { transferBool = false; }
+                else
+                {
+                    Console.Clear();
+                    ReturnInstruction(0);
+                    Console.WriteLine("\n\n\t\tFel inmatning! Skriv in" +
+                        " kontonummer med 9st siffror!\n");
+                    transferBool = true;
+                }
+            } while (transferBool);
+        }
+        static void ReturnInstruction(int addRow)
+        {
+            Console.SetCursorPosition(5, 15 + addRow);
+            Console.Write("Mata in \"R\" för att avbryta!");
+            Console.SetCursorPosition(0, 0);
+        }
     }
 }
