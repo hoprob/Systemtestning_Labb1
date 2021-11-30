@@ -23,6 +23,9 @@ namespace TeamHamsterBank
         internal int AccountNumber { get  => _accountNum;  }
         private string _customerID;
         internal string CustomerID { get => _customerID; }
+
+        public static List<string> CurrencyList = new List<string>() { "SEK", "EUR", "GBP", "USD"}; // List of available currencies in the bank
+        
         private List<string[]> _transaction = new List<string[]>();
         //This Constructor will only be called when the app starts to
         // declare the accounts that already exist.
@@ -102,6 +105,14 @@ namespace TeamHamsterBank
         {
             this._balance -= transferSum;
             toAccount._balance += transferSum;
+        }
+        public static void PrintCurrencies() // Prints available currencies in the bank
+        {
+            Console.WriteLine("  * Tillgängliga valutor *\n");
+            foreach (string currency in CurrencyList)
+            {
+                Console.WriteLine($"    [{currency}]");
+            }
         }
     }
 }
