@@ -58,6 +58,7 @@ namespace TeamHamsterBank
             Customer newCustomer = new Customer(userId, inputFullName, inputPassword);
             UsersList.Add(newCustomer);
 
+            Console.Clear();
             Console.WriteLine($"\n  Ny användare {newCustomer.FullName} med ID {newCustomer.UserID} har skapats.\n");
 
             // Create new account for new user
