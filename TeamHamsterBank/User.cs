@@ -6,9 +6,9 @@ namespace TeamHamsterBank
 {
     abstract class User
     {
-        private string _fullName;
-        private string _userId;
-        private string _password;
+        protected string _userId;
+        protected string _fullName;
+        protected string _password;
 
         public string FullName { get => _fullName; }
         public string UserID { get => _userId; }
@@ -19,7 +19,7 @@ namespace TeamHamsterBank
             _fullName = FullName;
             _password = Password;
         }
-
+    
         public static bool CheckUserName(List<User> users, string inputId)
         {
             return users.Exists(u => u._userId == inputId);
@@ -34,6 +34,20 @@ namespace TeamHamsterBank
         }
         public static bool CheckPassword(Customer customer, string inputPassword)
             => (customer._password == inputPassword);
-
+        public string ToSave()
+        {
+            string details = String.Empty;
+            if (this is Admin)
+            {
+                details = $"{_userId}________{_fullName}________{_password}" +
+                    $"________Admin\n";
+            }
+            else if (this is Customer)
+            {
+                details = $"{_userId}________{_fullName}________{_password}" +
+                    $"________Customer\n";
+            }
+            return details;
+        }
     }
 }

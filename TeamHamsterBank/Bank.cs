@@ -9,38 +9,10 @@ namespace TeamHamsterBank
     {
         internal static List<User> UsersList = new List<User>();
                       // Objects for testing
-        public static void DeclareUsers()
-        {
-                                     //    _user_ID  , _fullName ,  _password                  
-            UsersList.Add(new Admin("111111", "Robin Svensson", "password"));
-            UsersList.Add(new Admin("222222", "Elin Ericstam", "password"));
-            UsersList.Add(new Customer("333333", "Nael Sharabi", "password"));
-            UsersList.Add(new Customer("444444", "Gillian Brown", "password"));
-            UsersList.Add(new Customer("555555", "Allen Lee", "password"));
-            UsersList.Add(new Customer("666666", "Mike Jefferson", "password"));
-            UsersList.Add(new Customer("777777", "Alfred Kaiser", "password"));
-        }
+ 
         // Adding accounts to the test-objects for testing.
         // All customers are getting the same acount details.
-        public static void AddAccounts()
-        {
-            foreach (User user in UsersList)
-            {
-                if (user is Customer)
-                {
-                    Customer customer = user as Customer;
-
-                    customer._accounts.Add(new Account(
-                        "Allkonto         ", 50000, "[SEK]"));
-                    customer._accounts.Add(new Account(
-                        "Sparkonto_       ", 1120.220m, "[EUR]"));
-                    customer._accounts.Add(new Account(
-                        "Framtidskonto    ", 15000, "[GBP]"));
-                    customer._accounts.Add(new Account(
-                        "Investeringskonto", 30000, "[USD]"));
-                }
-            }
-        }
+ 
 
         public static void Login()
         {
@@ -184,6 +156,7 @@ namespace TeamHamsterBank
                         Console.ReadKey();
                         break;
                 }
+                StoreAndLoad.SaveAccounts();
             }
         }
 
@@ -400,6 +373,8 @@ namespace TeamHamsterBank
                         Console.ReadKey();
                         break;
                 }
+                StoreAndLoad.SaveUsers();
+                StoreAndLoad.SaveAccounts();
             }
         }
         
