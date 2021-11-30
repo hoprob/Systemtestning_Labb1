@@ -6,15 +6,24 @@ namespace TeamHamsterBank
 {
     class Customer : User
     {
-        int customerId;
-        List<Account> accounts;
+        internal List<Account> _accounts = new List<Account>();
         public Customer(string UserId, string FullName, string Password)
          : base(UserId, FullName, Password)
         {
+            SortOutDetails(StoreAndLoad.AccountFile);
 
         }
-        internal List<Account> _accounts = new List<Account>();
-
+        public void SortOutDetails(List<string[]> accountsFile)
+        {
+            foreach (string[] account in accountsFile)
+            {
+                if (_userId == account[4])
+                {
+                    _accounts.Add(new Account(account[0],
+                    Decimal.Parse(account[2]), account[3], account[4]));
+                }
+            }
+        }
         public void CreateNewAccount()
         {
             Console.WriteLine("\t*** Skapa ett nytt konto ***\n");
@@ -105,7 +114,7 @@ namespace TeamHamsterBank
             } while (rerunSelection);
 
             // Create a new account object and add to _accounts list
-            Account newAccount = new Account(accountName, currency);
+            Account newAccount = new Account(accountName, currency, _userId);
             _accounts.Add(newAccount);
 
             Console.Clear();
