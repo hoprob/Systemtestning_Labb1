@@ -9,33 +9,11 @@ namespace TeamHamsterBank
     {
         internal static List<User> UsersList = new List<User>();
                       // Objects for testing
-        public static void DeclareUsers()
-        {
-                                     //    _user_ID  , _fullName ,  _password                  
-            UsersList.Add(new Admin("111111", "Robin Svensson", "password"));
-            UsersList.Add(new Admin("222222", "Elin Ericstam", "password"));
-            UsersList.Add(new Customer("333333", "Nael Sharabi", "password"));
-            UsersList.Add(new Customer("444444", "Gillian Brown", "password"));
-            UsersList.Add(new Customer("555555", "Allen Lee", "password"));
-            UsersList.Add(new Customer("666666", "Mike Jefferson", "password"));
-            UsersList.Add(new Customer("777777", "Alfred Kaiser", "password"));
-        }
-                // Adding accounts to the test-objects for testing.
-                // All customers are getting the same acount details.
-        public static void AddAccounts()
-        {
-            foreach (User user in UsersList)
-            {
-                if (user is Customer)
-                {
-                    Customer customer =  user as Customer;
-                    customer._accounts.Add(new Account("Allkonto         ", 50000));
-                    customer._accounts.Add(new Account("Sparkonto_       ", 120000));
-                    customer._accounts.Add(new Account("Framtidskonto    ", 15000));
-                    customer._accounts.Add(new Account("Investeringskonto", 30000));
-                }
-            }
-        }
+ 
+        // Adding accounts to the test-objects for testing.
+        // All customers are getting the same acount details.
+ 
+
         public static void Login()
         {
             Console.Clear();
@@ -64,7 +42,7 @@ namespace TeamHamsterBank
                 Console.Write("\n\n   Skriv in ditt lösenord:  ");
                 string inputPassword = Console.ReadLine();
 
-                if ((user = User.CheckPassWord(UsersList, inputUser_ID.ToUpper(), inputPassword)) != null )
+                if ((user = User.CheckPassword(UsersList, inputUser_ID.ToUpper(), inputPassword)) != null )
                 {
                     CheckUserType(user);
                     Login();
@@ -128,10 +106,10 @@ namespace TeamHamsterBank
                 Console.Clear();
                 Console.Write("\n\t\t* (( Välkommen {0}" +
                                                                   " )) * \n\n" +
-                    "  [1] konton och saldo \n\n" +
+                    "  [1] Konton och saldo \n\n" +
                     "  [2] Överföring mellan egna konton\n\n" +
-                    "  [3]  \n\n" +
-                    "  [4]  \n\n" +
+                    "  [3] Sätt in pengar \n\n" +
+                    "  [4] Ta ut pengar \n\n" +
                     "  [5] Öppna ett nytt konto \n\n" +
                     "  [6] Logga ut \n\n" +
                     "   \tVälj:  ", user.FullName);
@@ -144,19 +122,21 @@ namespace TeamHamsterBank
                         Account.SelectAccount(customer, customer._accounts.Count);
                         Redirecting();
                         break;
-                    case 2:
+                    case 2: // Transfer money
                         Console.Clear();
                         InternalTransfer(customer);
                         Redirecting();
                         break;
-                    case 3:
+                    case 3: // Deposit
                         Console.Clear();
-                        // Deposition method  ??  
+                        Console.WriteLine(Account.PrintAccounts(customer));
+                        Deposit(customer);
                         Redirecting();
                         break;
-                    case 4:
+                    case 4: // Withdraw
                         Console.Clear();
-                        // Withdrawal method  ??
+                        Console.WriteLine(Account.PrintAccounts(customer)); 
+                        Withdraw(customer);
                         Redirecting();
                         break;
                     case 5: // Create new account as customer
@@ -176,7 +156,95 @@ namespace TeamHamsterBank
                         Console.ReadKey();
                         break;
                 }
+                StoreAndLoad.SaveAccounts();
             }
+        }
+
+        static void Deposit(Customer customer)
+        {
+            int index = 0;
+            while (index < 1 || index > customer._accounts.Count)
+            {
+                Console.Write("\n\n   Välj vilket konto du vill" +
+                    " sätta in:   ");
+                Int32.TryParse(Console.ReadLine(), out index);
+            }
+            index += -1;
+            decimal deposit = 0;
+            while (deposit < 1)
+            {
+                Console.Write("\n\n   Var vänlig och bekräfta hur mycket" +
+                    " du kommer sätta in:   ");
+                Decimal.TryParse(Console.ReadLine(), out deposit);
+            }
+
+            customer._accounts[index].Balance += deposit;
+            Console.Clear();
+            Console.Write("\n\n   '{0}' har lagts till [{1}]", deposit,
+                customer._accounts[index].AccountNumber);
+            Account.SubmitTransaction(customer, index, deposit);
+            Console.WriteLine(Account.PrintAccounts(customer));
+        }
+        static void Withdraw(Customer customer)
+        {
+            int index = 0;
+            while (index < 1 || index > customer._accounts.Count)
+            {
+                Console.Write("\n\n   Välj vilket konto du vill" +
+                    " ta ut från:   ");
+                Int32.TryParse(Console.ReadLine(), out index);
+            }
+            index += -1;
+            decimal withdrawal = 0;
+            decimal balance = customer._accounts[index].Balance;
+            if (balance < 1)
+            {
+                Console.Write("\n\n   Det går inte att ta ut pengar.\t Kontot är tomt !");
+                Console.ReadKey();
+                return;
+            }
+            while (!customer._accounts[index].EnoughBalance(withdrawal) || withdrawal < 1)
+            {
+                Console.Write("\n\n   Maxvärdet du kan ta ut är [{0}]\n  " +
+                    "\n   Var vänlig och bekräfta hur mycket du vill" +
+                    " ta ut:   ", balance);
+                Decimal.TryParse(Console.ReadLine(), out withdrawal);
+            }
+            if (!VerifyCustomer(customer))
+            {
+                return;
+            }
+            customer._accounts[index].Balance -= withdrawal;
+            Console.Clear();
+            Console.Write("\n\n   '{0}'  har tagits bort från [{1}]", withdrawal,
+                customer._accounts[index].AccountNumber);
+            Account.SubmitTransaction(customer, index, - withdrawal);
+            Console.WriteLine(Account.PrintAccounts(customer));
+        }
+
+        static bool VerifyCustomer(Customer customer)
+        {
+            int attempts = 3;
+            bool valid = false;
+            while (attempts > 0)
+            {
+                attempts--;
+                Console.Write("\n\n   Skriv in ditt lösenord för att verifiera dig:  ");
+                string inputPassword = Console.ReadLine().Trim();
+                if (User.CheckPassword(customer, inputPassword))
+                {
+                    valid = true;
+                    break;
+                }
+                if (attempts == 1)
+                {
+                    Console.WriteLine("\n\t(( Observera! Du har bara " +
+                                                "ett försök kvar! ))");
+                }
+                Console.Write("\n\tFelaktig kod !\tVar god och " +
+                                                   "försök ingen: ");
+            }
+            return valid;
         }
         static void InternalTransfer(Customer customer)
         {
@@ -240,7 +308,7 @@ namespace TeamHamsterBank
                             Console.WriteLine("\n\tOgiltligt val! Försök igen!\n");
                             transferBool = true;
                         }
-                    } while (transferBool);                   
+                    } while (transferBool);
                 }
                 else
                 {
@@ -248,7 +316,7 @@ namespace TeamHamsterBank
                     Console.WriteLine("\n\tOgiltligt val! Försök igen!\n");
                     transferBool = true;
                 }
-            } while (transferBool);          
+            } while (transferBool);
         }
         static void AdminMenu(User admin)
         {
@@ -305,8 +373,11 @@ namespace TeamHamsterBank
                         Console.ReadKey();
                         break;
                 }
+                StoreAndLoad.SaveUsers();
+                StoreAndLoad.SaveAccounts();
             }
         }
+        
         static void Redirecting()
         {
             Console.Write("\n\n\n\t\tKlicka 'Enter' för att komma till huvudmenyn");

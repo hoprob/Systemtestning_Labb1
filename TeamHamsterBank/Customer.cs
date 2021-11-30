@@ -6,21 +6,30 @@ namespace TeamHamsterBank
 {
     class Customer : User
     {
-        int customerId;
-        List<Account> accounts;
+        internal List<Account> _accounts = new List<Account>();
         public Customer(string UserId, string FullName, string Password)
          : base(UserId, FullName, Password)
         {
+            SortOutDetails(StoreAndLoad.AccountFile);
 
         }
-        internal List<Account> _accounts = new List<Account>();
-
+        public void SortOutDetails(List<string[]> accountsFile)
+        {
+            foreach (string[] account in accountsFile)
+            {
+                if (_userId == account[4])
+                {
+                    _accounts.Add(new Account(account[0],
+                    Decimal.Parse(account[2]), account[3], account[4]));
+                }
+            }
+        }
         public void CreateNewAccount()
         {
             Console.WriteLine("\t*** Skapa ett nytt konto ***\n");
 
             // Options for account name
-            Console.WriteLine("Vänligen ange kontonamn:\n" +
+            Console.WriteLine("  Vänligen ange kontonamn:\n\n" +
                 "  [1] Allkonto\n" +
                 "  [2] Sparkonto\n" +
                 "  [3] Framtidskonto\n" +
@@ -32,7 +41,7 @@ namespace TeamHamsterBank
             // Select account name
             do
             {
-                Console.Write("Kontonamn: ");
+                Console.Write("\tKontonamn: ");
                 Int32.TryParse(Console.ReadLine(), out int slctAccount);
 
                 switch (slctAccount)
@@ -61,7 +70,7 @@ namespace TeamHamsterBank
             } while (rerunSelection);
 
             // Options for account name
-            Console.WriteLine("\nVänligen ange valuta:\n" +
+            Console.WriteLine("\n  Vänligen ange valuta:\n\n" +
                 "  [1] [SEK]\n" +
                 "  [2] [EUR]\n" +
                 "  [3] [GBP]\n" +
@@ -71,7 +80,7 @@ namespace TeamHamsterBank
 
             do
             {
-                Console.Write("Valuta: ");
+                Console.Write("\tValuta: ");
                 Int32.TryParse(Console.ReadLine(), out int slctCurrency);
 
                 switch (slctCurrency)
@@ -100,10 +109,11 @@ namespace TeamHamsterBank
             } while (rerunSelection);
 
             // Create a new account object and add to _accounts list
-            Account newAccount = new Account(accountName /*ADD CURRENCY HERE*/);
+            Account newAccount = new Account(accountName, currency, _userId);
             _accounts.Add(newAccount);
 
             Console.WriteLine($"\nNytt {accountName.Trim()} har skapats med valuta {currency}.");
         }
+        
     }
 }

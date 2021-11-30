@@ -7,7 +7,7 @@ namespace TeamHamsterBank
 {
     class Admin:User
     {
-        public Admin(string FullName, string UserId, string Password) : base(FullName, UserId, Password) { }
+        public Admin(string UserId, string FullName,  string Password) : base(UserId, FullName,  Password) { }
         public static void CreateNewCustomer(List<User> UsersList)
         {
             Console.WriteLine("\t*** Skapa en ny användare ***\n");
