@@ -19,11 +19,11 @@ namespace TeamHamsterBank
                 {
                     _fileLines = File.ReadAllLines
                         ("Accounts.txt", Encoding.Default).ToList();
-                    for (int i = 0; i < _fileLines.Count; i++)
-                    {
-                        AccountFile.Add(_fileLines[i].Split(new string[]
-                        { "________" }, StringSplitOptions.None));
-                    }
+                }
+                else if (File.Exists("Accounts - Backup.txt"))
+                {
+                    _fileLines = File.ReadAllLines
+                        ("Accounts - Backup.txt", Encoding.Default).ToList();
                 }
                 else
                 {
@@ -31,6 +31,12 @@ namespace TeamHamsterBank
                         "Vi beklagar stilleståndet\n\n\t" +
                         " Tryck 'Enter för att avsluta tjänsten'");
                 }
+                for (int i = 0; i < _fileLines.Count; i++)
+                {
+                    AccountFile.Add(_fileLines[i].Split(new string[]
+                    { "________" }, StringSplitOptions.None));
+                }
+                AccountFile = AccountFile.OrderBy(arr => int.Parse(arr[2])).ToList();
             }
             catch (Exception e)
             {
@@ -41,18 +47,17 @@ namespace TeamHamsterBank
         }
         public static void LoadUsers()
         {
-            try
+           try
             {
                 if (File.Exists("Users.txt"))
                 {
                     _fileLines = File.ReadAllLines
                         ("Users.txt", Encoding.Default).ToList();
-                    for (int i = 0; i < _fileLines.Count; i++)
-                    {
-                        UsersFile.Add(_fileLines[i].Split(new string[]
-                        { "________" }, StringSplitOptions.None));
-                    }
-                    DeclareUsers();
+                }
+                else if (File.Exists("Users - Backup.txt"))
+                {
+                    _fileLines = File.ReadAllLines
+                        ("Users - Backup.txt", Encoding.Default).ToList();
                 }
                 else
                 {
@@ -60,6 +65,12 @@ namespace TeamHamsterBank
                         "Vi beklagar stilleståndet\n\n\t" +
                         " Tryck 'Enter för att avsluta tjänsten'");
                 }
+                for (int i = 0; i < _fileLines.Count; i++)
+                {
+                    UsersFile.Add(_fileLines[i].Split(new string[]
+                    { "________" }, StringSplitOptions.None));
+                }
+                DeclareUsers();
             }
             catch (Exception e)
             {

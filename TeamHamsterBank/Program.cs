@@ -9,7 +9,6 @@ namespace TeamHamsterBank
             StoreAndLoad.LoadAccounts();
             StoreAndLoad.LoadUsers();
 
-            // Bank.AddAccounts();
             Bank.Login();
         }
     }

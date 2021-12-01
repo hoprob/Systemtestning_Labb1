@@ -17,10 +17,11 @@ namespace TeamHamsterBank
         {
             foreach (string[] account in accountsFile)
             {
-                if (_userId == account[4])
+                Console.WriteLine(account.Length);
+                if (_userId == account[5])
                 {
-                    _accounts.Add(new Account(account[0],
-                    account[1], Decimal.Parse(account[3]), account[4], account[5]));
+                    _accounts.Add(new Account(account[0], account[1], account[2],
+                        Decimal.Parse(account[3]), account[4], account[5]));
                 }
             }
         }
@@ -47,15 +48,15 @@ namespace TeamHamsterBank
                 switch (slctAccount)
                 {
                     case 1:
-                        accountType = "Allkonto         ";
+                        accountType = "Allkonto";
                         rerunSelection = false;
                         break;
                     case 2:
-                        accountType = "Sparkonto        ";
+                        accountType = "Sparkonto";
                         rerunSelection = false;
                         break;
                     case 3:
-                        accountType = "Framtidskonto    ";
+                        accountType = "Framtidskonto";
                         rerunSelection = false;
                         break;
                     case 4:

@@ -39,6 +39,17 @@ namespace TeamHamsterBank
             _currency = currency;
             _customerID = customerID;
         }
+        public Account(string accountName, string accountType, string accountNum,
+                        decimal balance, string currency, string customerID)
+        {
+            _staticAccountNum++;
+            _accountName = accountName;
+            _accountType = accountType;
+            _accountNum = int.Parse(accountNum);
+            _balance = balance;
+            _currency = currency;
+            _customerID = customerID;
+        }
         // This constructer will be called by the customer-object to open a new accounnt
         public Account(string accountName, string accountType, string currency, string customerID)
         {
@@ -53,13 +64,13 @@ namespace TeamHamsterBank
         public string ToSave()
         {
 
-            return $"{_accountName}________{_accountType}________{_accountNum}________{_balance}" +
+            return $"{_accountName}________{_accountType.Trim()}________{_accountNum}________{_balance}" +
                    $"________{_currency}________{_customerID}\n";
         }
         public override string ToString()
         {
             return $"{_accountName}    Kontotyp: [{_accountType}]    KontoNr: [{_accountNum}]" +
-                   $"    Saldo: {_balance:0.00}    {_currency}\n\n";
+                   $"    Saldo: {_balance:0.00}    [{_currency}]\n\n";
         }
         public static string PrintAccounts(Customer customer)
         {
