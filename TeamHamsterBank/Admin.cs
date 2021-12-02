@@ -64,5 +64,25 @@ namespace TeamHamsterBank
             // Create new account for new user
             newCustomer.CreateNewAccount();
         }
+        internal static void SetCurrencyRate() // Prints available currencies in the bank
+        {
+            Bank.PrintCurrentExchange();
+            int index = -1;
+            while (index > Account.CurrencyList.Count - 1 || index < 1)
+            {
+                Console.Write("\n\n\tVälj vilken valuta:   ");
+                Int32.TryParse(Console.ReadLine(), out index);
+            }
+            Console.Write("\n\n\tSkrvi in växlingspriset:   ");
+            decimal price = 0;
+            while (!Decimal.TryParse(Console.ReadLine(), out price))
+            {
+                Console.Write("\n\n\tSkrvi in växlingspriset:   ");
+            }
+            Account.CurrencyList[index][1] = price.ToString();
+
+            Console.WriteLine(Account.CurrencyList[index][1]);
+            Bank.PrintCurrentExchange();
+        }
     }
 }

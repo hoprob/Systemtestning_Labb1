@@ -93,7 +93,7 @@ namespace TeamHamsterBank
             {
                 inputCurrency = Console.ReadLine().Trim().ToUpper(); // Input currency
 
-                if (inputCurrency.Length != 3 || !(Account.CurrencyList.Contains(inputCurrency)))
+                if (inputCurrency.Length != 3 || !( Account.CurrencyList.Exists( e => e[0].Contains(inputCurrency)) ))
                 {
                     Console.Clear();
                     Console.WriteLine("\n  Oglitligt val. Vänligen ange valuta med tre bokstäver.\n");
@@ -104,7 +104,7 @@ namespace TeamHamsterBank
                 {
                     currency = inputCurrency; // Set currency
                 }
-            } while (inputCurrency.Length != 3 || !(Account.CurrencyList.Contains(inputCurrency)));
+            } while (inputCurrency.Length != 3 || !(Account.CurrencyList.Exists(e => e[0].Contains(inputCurrency))));
 
             // Create a new account object and add to _accounts list
             Account newAccount = new Account(accountName, accountType, currency, _userId);

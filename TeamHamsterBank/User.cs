@@ -49,5 +49,6 @@ namespace TeamHamsterBank
             }
             return details;
         }
+
     }
 }
