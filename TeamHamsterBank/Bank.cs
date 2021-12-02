@@ -256,34 +256,41 @@ namespace TeamHamsterBank
             int transferTo;
             decimal transferSum;
             bool transferBool = true;
+            string input;
             Console.Clear();
+            ReturnInstruction(customer._accounts.Count);
             do
             {
                 Console.WriteLine("Vilket konto vill du föra över FRÅN?");
                 Console.WriteLine(Account.PrintAccounts(customer));
                 Console.Write("\n\tVälj: ");
-                if (Int32.TryParse(Console.ReadLine(), out transferFrom)
+                input = Console.ReadLine();
+                if (Int32.TryParse(input, out transferFrom)
                     && transferFrom <= customer._accounts.Count() &&
                     transferFrom > 0)
                 {
                     transferFrom--;
                     Console.Clear();
+                    ReturnInstruction(customer._accounts.Count);
                     do
                     {
                         Console.WriteLine("Vilket konto vill du överföra TILL?");
                         Console.WriteLine(Account.PrintAccounts(customer));
                         Console.Write("\n\tVälj: ");
-                        if (Int32.TryParse(Console.ReadLine(), out transferTo) &&
+                        input = Console.ReadLine();
+                        if (Int32.TryParse(input, out transferTo) &&
                             transferTo <= customer._accounts.Count()
                             && transferTo > 0
                             && transferFrom + 1 != transferTo)
                         {
                             transferTo--;
                             Console.Clear();
+                            ReturnInstruction(0);
                             do
                             {
                                 Console.Write("\n\tHur mycket vill du föra över?: ");
-                                if (Decimal.TryParse(Console.ReadLine(),
+                                input = Console.ReadLine();
+                                if (Decimal.TryParse(input,
                                     out transferSum))
                                 {
                                     if (customer._accounts[transferFrom].
@@ -308,6 +315,7 @@ namespace TeamHamsterBank
                                     else
                                     {
                                         Console.Clear();
+                                        ReturnInstruction(0);
                                         Console.WriteLine("\n\tDu har inte" +
                                             " tillräckligt med pengar på kontot!" +
                                             $"\n\tDu kan max föra över" +
@@ -315,26 +323,32 @@ namespace TeamHamsterBank
                                         transferBool = true;
                                     }
                                 }
+                                else if (input.ToUpper() == "R") { transferBool = false; }
                                 else
                                 {
                                     Console.Clear();
+                                    ReturnInstruction(0);
                                     Console.WriteLine("\n\tOgiltlig inmatning!" +
                                         " Skriv in summa med siffror!\n");
                                     transferBool = true;
                                 }
                             } while (transferBool);
                         }
+                        else if (input.ToUpper() == "R") { transferBool = false; }
                         else
                         {
                             Console.Clear();
+                            ReturnInstruction(customer._accounts.Count);
                             Console.WriteLine("\n\tOgiltligt val! Försök igen!\n");
                             transferBool = true;
                         }
                     } while (transferBool);
                 }
+                else if (input.ToUpper() == "R") { transferBool = false; }
                 else
                 {
                     Console.Clear();
+                    ReturnInstruction(customer._accounts.Count);
                     Console.WriteLine("\n\tOgiltligt val! Försök igen!\n");
                     transferBool = true;
                 }
@@ -394,7 +408,7 @@ namespace TeamHamsterBank
             Console.Write("\n\n\n\t\tKlicka 'Enter' för att komma till huvudmenyn");
             Console.ReadLine();
         }
-        public static void ExternalTransfer(Customer customer)
+        static void ExternalTransfer(Customer customer)
         {
             int toAccountNum;
             Customer toCustomer = null;
