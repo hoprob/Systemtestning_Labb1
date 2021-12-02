@@ -2,11 +2,7 @@ using System;
 using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
-<<<<<<< HEAD
 using System.Net.Http;
-using System.Threading.Tasks;
-=======
->>>>>>> f400fca384606c15efa791602ee3b6fcc72bfe7d
 using System.Text;
 
 namespace TeamHamsterBank
@@ -31,7 +27,7 @@ namespace TeamHamsterBank
                     if (User.CheckUserName(UsersList, inputUser_ID.ToUpper()))
                     {
                         found = true;
-                    } 
+                    }
                 }
                 if (!found)
                 {
@@ -73,7 +69,6 @@ namespace TeamHamsterBank
                 AdminMenu(user);
             }
         }
-
         static void LockOut()
         {
             Console.Clear();
@@ -557,7 +552,6 @@ namespace TeamHamsterBank
             Console.Write("Mata in \"R\" för att avbryta!");
             Console.SetCursorPosition(0, 0);
         }
-<<<<<<< HEAD
 
         static async void UpdateEchangeRates()
         {
@@ -602,7 +596,6 @@ namespace TeamHamsterBank
                                              $"    {Account.CurrencyList[i][1]}\n");
             }
         }
-        //Den metod ska omvändla valutan till SEK om den är inte redan så.
         public static void ExchangeCurrency(ref decimal transfer, ref string currency)
         {
             foreach (string[] _currency in Account.CurrencyList)
@@ -618,7 +611,6 @@ namespace TeamHamsterBank
                 }
             }
         }
-        //Samma som ovanstående metod men omvänt
         public static void ExchangeBack(ref decimal transfer, ref string currency)
         {
             foreach (string[] _currency in Account.CurrencyList)
@@ -633,7 +625,7 @@ namespace TeamHamsterBank
                     return;
                 }
             }
-=======
+        }
         static string GetPassword()
         {
             StringBuilder password = new StringBuilder();
@@ -670,7 +662,6 @@ namespace TeamHamsterBank
                 }
             }
             return password.ToString();
->>>>>>> f400fca384606c15efa791602ee3b6fcc72bfe7d
         }
     }
 }
