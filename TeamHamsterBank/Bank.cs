@@ -2,8 +2,11 @@ using System;
 using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
+<<<<<<< HEAD
 using System.Net.Http;
 using System.Threading.Tasks;
+=======
+>>>>>>> f400fca384606c15efa791602ee3b6fcc72bfe7d
 using System.Text;
 
 namespace TeamHamsterBank
@@ -37,7 +40,7 @@ namespace TeamHamsterBank
                     continue;
                 }
                 Console.Write("\n\n   Skriv in ditt lösenord:  ");
-                string inputPassword = Console.ReadLine();
+                string inputPassword = GetPassword();
 
                 if ((user = User.CheckPassword(UsersList, inputUser_ID.ToUpper(), inputPassword)) != null )
                 {
@@ -236,7 +239,7 @@ namespace TeamHamsterBank
             {
                 attempts--;
                 Console.Write("\n\n   Skriv in ditt lösenord för att verifiera dig:  ");
-                string inputPassword = Console.ReadLine().Trim();
+                string inputPassword = GetPassword();
                 if (User.CheckPassword(customer, inputPassword))
                 {
                     valid = true;
@@ -554,6 +557,7 @@ namespace TeamHamsterBank
             Console.Write("Mata in \"R\" för att avbryta!");
             Console.SetCursorPosition(0, 0);
         }
+<<<<<<< HEAD
 
         static async void UpdateEchangeRates()
         {
@@ -629,6 +633,44 @@ namespace TeamHamsterBank
                     return;
                 }
             }
+=======
+        static string GetPassword()
+        {
+            StringBuilder password = new StringBuilder();
+            ConsoleKeyInfo key;
+            //Gets a char from each keypress until user press Enter
+            while ((key = Console.ReadKey()).Key != ConsoleKey.Enter)
+            {
+                if (key.Key == ConsoleKey.Backspace)
+                {
+                    //Enables user to use backspace if string is 1 or more chars.
+                    if (password.Length > 0)
+                    {
+                        Console.Write(" \b");
+                        password.Remove(password.Length - 1, 1);
+                    }
+                    else
+                    {
+                        //Ignores backspace if string has no chars
+                        Console.CursorLeft = Console.CursorLeft + 1;
+                        continue;
+                    }                   
+                }
+                //If input key is whitespace or control key, it ignores the input
+                else if (char.IsControl(key.KeyChar) || char.IsWhiteSpace(key.KeyChar))
+                {
+                    Console.CursorLeft = Console.CursorLeft - 1;
+                }
+                else
+                {
+                    //Erases char from console, replace it with * and saves char to string
+                    Console.Write("\b");
+                    Console.Write("*");
+                    password.Append(key.KeyChar);
+                }
+            }
+            return password.ToString();
+>>>>>>> f400fca384606c15efa791602ee3b6fcc72bfe7d
         }
     }
 }
