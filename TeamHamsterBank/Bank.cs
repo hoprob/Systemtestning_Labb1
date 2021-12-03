@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 
 namespace TeamHamsterBank
@@ -9,12 +10,6 @@ namespace TeamHamsterBank
     class Bank
     {
         internal static List<User> UsersList = new List<User>();
-                      // Objects for testing
- 
-        // Adding accounts to the test-objects for testing.
-        // All customers are getting the same acount details.
- 
-
         public static void Login()
         {
             Console.Clear();
@@ -32,7 +27,7 @@ namespace TeamHamsterBank
                     if (User.CheckUserName(UsersList, inputUser_ID.ToUpper()))
                     {
                         found = true;
-                    } 
+                    }
                 }
                 if (!found)
                 {
@@ -74,7 +69,6 @@ namespace TeamHamsterBank
                 AdminMenu(user);
             }
         }
-
         static void LockOut()
         {
             Console.Clear();
@@ -145,7 +139,7 @@ namespace TeamHamsterBank
                         break;
                     case 4: // Withdraw
                         Console.Clear();
-                        Console.WriteLine(Account.PrintAccounts(customer)); 
+                        Console.WriteLine(Account.PrintAccounts(customer));
                         Withdraw(customer);
                         Redirecting();
                         break;
@@ -262,34 +256,41 @@ namespace TeamHamsterBank
             int transferTo;
             decimal transferSum;
             bool transferBool = true;
+            string input;
             Console.Clear();
+            ReturnInstruction(customer._accounts.Count);
             do
             {
                 Console.WriteLine("Vilket konto vill du föra över FRÅN?");
                 Console.WriteLine(Account.PrintAccounts(customer));
                 Console.Write("\n\tVälj: ");
-                if (Int32.TryParse(Console.ReadLine(), out transferFrom)
+                input = Console.ReadLine();
+                if (Int32.TryParse(input, out transferFrom)
                     && transferFrom <= customer._accounts.Count() &&
                     transferFrom > 0)
                 {
                     transferFrom--;
                     Console.Clear();
+                    ReturnInstruction(customer._accounts.Count);
                     do
                     {
                         Console.WriteLine("Vilket konto vill du överföra TILL?");
                         Console.WriteLine(Account.PrintAccounts(customer));
                         Console.Write("\n\tVälj: ");
-                        if (Int32.TryParse(Console.ReadLine(), out transferTo) &&
+                        input = Console.ReadLine();
+                        if (Int32.TryParse(input, out transferTo) &&
                             transferTo <= customer._accounts.Count()
                             && transferTo > 0
                             && transferFrom + 1 != transferTo)
                         {
                             transferTo--;
                             Console.Clear();
+                            ReturnInstruction(0);
                             do
                             {
                                 Console.Write("\n\tHur mycket vill du föra över?: ");
-                                if (Decimal.TryParse(Console.ReadLine(),
+                                input = Console.ReadLine();
+                                if (Decimal.TryParse(input,
                                     out transferSum))
                                 {
                                     if (customer._accounts[transferFrom].
@@ -314,6 +315,7 @@ namespace TeamHamsterBank
                                     else
                                     {
                                         Console.Clear();
+                                        ReturnInstruction(0);
                                         Console.WriteLine("\n\tDu har inte" +
                                             " tillräckligt med pengar på kontot!" +
                                             $"\n\tDu kan max föra över" +
@@ -321,26 +323,32 @@ namespace TeamHamsterBank
                                         transferBool = true;
                                     }
                                 }
+                                else if (input.ToUpper() == "R") { transferBool = false; }
                                 else
                                 {
                                     Console.Clear();
+                                    ReturnInstruction(0);
                                     Console.WriteLine("\n\tOgiltlig inmatning!" +
                                         " Skriv in summa med siffror!\n");
                                     transferBool = true;
                                 }
                             } while (transferBool);
                         }
+                        else if (input.ToUpper() == "R") { transferBool = false; }
                         else
                         {
                             Console.Clear();
+                            ReturnInstruction(customer._accounts.Count);
                             Console.WriteLine("\n\tOgiltligt val! Försök igen!\n");
                             transferBool = true;
                         }
                     } while (transferBool);
                 }
+                else if (input.ToUpper() == "R") { transferBool = false; }
                 else
                 {
                     Console.Clear();
+                    ReturnInstruction(customer._accounts.Count);
                     Console.WriteLine("\n\tOgiltligt val! Försök igen!\n");
                     transferBool = true;
                 }
@@ -355,11 +363,9 @@ namespace TeamHamsterBank
                 Console.Write("\n * Admin * \t\t*  (( Välkommen {0} " +
                                                                   " )) * \n\n" +
                     "  [1] Registrera en ny kund  \n\n" +
-                    "  [2]  \n\n" +
-                    "  [3]  \n\n" +
-                    "  [4]  \n\n" +
-                    "  [5]  \n\n" +
-                    "  [6] Logga ut \n\n" +
+                    "  [2] Uppdatera växelkurser för alla valutor  (API-samtal)\n\n" +
+                    "  [3] Sätt in växelkurser för en valuta \n\n" +
+                    "  [4] Logga ut \n\n" +
                     "   \tVälj:  ", admin.FullName);
                 Int32.TryParse(Console.ReadLine(), out int option);
                 switch (option)
@@ -371,25 +377,16 @@ namespace TeamHamsterBank
                         break;
                     case 2:
                         Console.Clear();
-                        //   ??
+                        UpdateEchangeRates();
+                        Thread.Sleep(2450);
                         Redirecting();
                         break;
                     case 3:
                         Console.Clear();
-                        //   ??
+                        Admin.SetCurrencyRate();
                         Redirecting();
                         break;
                     case 4:
-                        Console.Clear();
-                        //   ??
-                        Redirecting();
-                        break;
-                    case 5:
-                        Console.Clear();
-                        //   ??
-                        Redirecting();
-                        break;
-                    case 6:
                         Console.Clear();
                         Console.WriteLine("\n\n\n\n\t\tVälkommen åter :-)");
                         Thread.Sleep(1800);
@@ -397,7 +394,7 @@ namespace TeamHamsterBank
                         break;
                     default:
                         Console.WriteLine("\t\tOgiltig inmatning!   " +
-                        "Var god och välj från 1 - 6\n");
+                        "Var god och välj från 1 - 4\n");
                         Console.ReadKey();
                         break;
                 }
@@ -411,7 +408,7 @@ namespace TeamHamsterBank
             Console.Write("\n\n\n\t\tKlicka 'Enter' för att komma till huvudmenyn");
             Console.ReadLine();
         }
-        public static void ExternalTransfer(Customer customer)
+        static void ExternalTransfer(Customer customer)
         {
             int toAccountNum;
             Customer toCustomer = null;
@@ -568,6 +565,80 @@ namespace TeamHamsterBank
             Console.SetCursorPosition(5, 15 + addRow);
             Console.Write("Mata in \"R\" för att avbryta!");
             Console.SetCursorPosition(0, 0);
+        }
+
+        static async void UpdateEchangeRates()
+        {
+            Console.WriteLine("\n\n\t\tHämtar uppgifter.........");
+            try
+            {
+                HttpClient client = new HttpClient();
+                foreach (string[] currency in Account.CurrencyList)
+                {
+                    string respons = await client.GetStringAsync(GetRequest(currency[0]));
+                    currency[1] = respons.Substring(11).Replace("}", "");
+                }
+                Console.Clear();
+                Console.WriteLine("\n\t\t\tUppdaterat {0}\n\n", DateTime.Now);
+                PrintCurrentExchange();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("\n\tKontrollera din internetanslutning" +
+                                    " eller testa igen om en timme");
+            }
+        }
+        static string GetRequest(string ISO_Code)
+        {
+            StringBuilder response = new StringBuilder();
+            response.Append("https://free.currconv.com/api/v7/convert?q=");
+            response.Append(ISO_Code);
+            response.Append("_SEK&compact=ultra&apiKey=b9ab32024407ef485ccf");
+
+            return response.ToString();
+        }
+        internal static void PrintCurrentExchange()
+        {
+            Console.WriteLine("\tAktuell valutakurs för Svenska kronor (SEK) \n\n");
+            for (int i = 0; i < Account.CurrencyList.Count; i++)
+            {
+                if (Account.CurrencyList[i][0] == "SEK")
+                {
+                    continue;
+                }
+                Console.WriteLine($"   [{i}]    [{ Account.CurrencyList[i][0]}]" +
+                                             $"    {Account.CurrencyList[i][1]}\n");
+            }
+        }
+        public static void ExchangeCurrency(ref decimal transfer, ref string currency)
+        {
+            foreach (string[] _currency in Account.CurrencyList)
+            {
+                if (currency == "SEK")
+                {
+                    return;
+                }
+                else if (_currency[0] == currency)
+                {
+                    transfer *= decimal.Parse(_currency[1]);
+                    return;
+                }
+            }
+        }
+        public static void ExchangeBack(ref decimal transfer, ref string currency)
+        {
+            foreach (string[] _currency in Account.CurrencyList)
+            {
+                if (currency == "SEK")
+                {
+                    return;
+                }
+                else if (_currency[0] == currency)
+                {
+                    transfer /= decimal.Parse(_currency[1]);
+                    return;
+                }
+            }
         }
         static string GetPassword()
         {
