@@ -17,7 +17,6 @@ namespace TeamHamsterBank
         {
             foreach (string[] account in accountsFile)
             {
-                Console.WriteLine(account.Length);
                 if (_userId == account[5])
                 {
                     _accounts.Add(new Account(account[0], account[1], account[2],

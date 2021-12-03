@@ -73,13 +73,16 @@ namespace TeamHamsterBank
                 Console.Write("\n\n\tVälj vilken valuta:   ");
                 Int32.TryParse(Console.ReadLine(), out index);
             }
-            Console.Write("\n\n\tSkrvi in växlingspriset:   ");
+            Console.Write("\n\n\tSkriv in växlingspriset:   ");
             decimal price = 0;
             while (!Decimal.TryParse(Console.ReadLine(), out price))
             {
-                Console.Write("\n\n\tSkrvi in växlingspriset:   ");
+                Console.Write("\n\n\tSkriv in växlingspriset:   ");
             }
-            Account.CurrencyList[index][1] = price.ToString();
+            string priceStr = price.ToString();
+            if (priceStr.Contains(','))
+                priceStr = priceStr.Replace(',', '.');
+            Account.CurrencyList[index][1] = priceStr;
 
             Console.WriteLine(Account.CurrencyList[index][1]);
             Bank.PrintCurrentExchange();
