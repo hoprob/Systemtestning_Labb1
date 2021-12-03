@@ -6,19 +6,19 @@ namespace TeamHamsterBank
 {
     class SavingsAccount : Account
     {
-        decimal _interest;
+        public decimal _interest; // Delete?
 
         public SavingsAccount(string accountName, string accountType, string currency, string customerID) 
             : base (accountName, accountType, currency, customerID)
         {
-            _interest = 1.01m;
+            _interest = 0.01m; // Delete?
         }
 
-        public static void CalculateSavingsInterest(decimal deposit, double years, decimal interest, bool showText)
+        public static void CalculateSavingsInterest(decimal deposit, double years, bool showText, string currency, decimal _interest = 0.01m)
         {
             if (showText)
             {
-                Console.WriteLine($"  På vårt sparkonto får du 1% i månadssparränta\n  {deposit} kr är värda: \n");
+                Console.WriteLine($"  På vårt sparkonto får du {_interest.ToString("#0.##%")} i månadssparränta\n  {deposit} kr är värda: \n");
             }
 
             decimal amount = deposit;
@@ -26,10 +26,10 @@ namespace TeamHamsterBank
 
             for (int i = 1; i <= months; i++)
             {
-                amount += (amount * interest);
+                amount += (amount * _interest);
             }
 
-            Console.WriteLine($"  Efter {years} år\t {amount.ToString("F")}" /*Add currency here*/);
+            Console.WriteLine($"  Efter {years} år\t {amount.ToString("F")} {currency}");
         }
     }
 }

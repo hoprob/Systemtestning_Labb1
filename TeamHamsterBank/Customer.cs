@@ -17,7 +17,6 @@ namespace TeamHamsterBank
         {
             foreach (string[] account in accountsFile)
             {
-                Console.WriteLine(account.Length);
                 if (_userId == account[5])
                 {
                     _accounts.Add(new Account(account[0], account[1], account[2],
@@ -118,10 +117,10 @@ namespace TeamHamsterBank
                     _accounts.Add(newSAccount);
 
                     Console.Clear(); // Prints an example of how much the money will be worth with interest
-                    SavingsAccount.CalculateSavingsInterest(1000, 0.5, 0.01m, true);
-                    SavingsAccount.CalculateSavingsInterest(1000, 1, 0.01m, false); ;
-                    SavingsAccount.CalculateSavingsInterest(1000, 5, 0.01m, false);
-                    SavingsAccount.CalculateSavingsInterest(1000, 10, 0.01m, false);
+                    SavingsAccount.CalculateSavingsInterest(1000, 0.5, true, currency); // 6 months
+                    SavingsAccount.CalculateSavingsInterest(1000, 1, false, currency); // 1 year
+                    SavingsAccount.CalculateSavingsInterest(1000, 5, false, currency); // 5 years
+                    SavingsAccount.CalculateSavingsInterest(1000, 10, false, currency); // 10 years
                     Console.WriteLine("\n  Tryck Enter för att fortsätta");
                     Console.ReadKey();
                     break;

@@ -20,6 +20,8 @@ namespace TeamHamsterBank
         private string _currency;
         private static int _staticAccountNum = 100000000;
         private int _accountNum;
+        internal string Currency { get => _currency;}
+        internal string AccountType { get => _accountType; }
         internal int AccountNumber { get  => _accountNum;  }
         private string _customerID;
         internal string CustomerID { get => _customerID; }
