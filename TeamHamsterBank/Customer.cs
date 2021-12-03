@@ -116,6 +116,14 @@ namespace TeamHamsterBank
                 case "Sparkonto":
                     SavingsAccount newSAccount = new SavingsAccount(accountName, accountType, currency, _userId);
                     _accounts.Add(newSAccount);
+
+                    Console.Clear(); // Prints an example of how much the money will be worth with interest
+                    SavingsAccount.CalculateSavingsInterest(1000, 0.5, 0.01m, true);
+                    SavingsAccount.CalculateSavingsInterest(1000, 1, 0.01m, false); ;
+                    SavingsAccount.CalculateSavingsInterest(1000, 5, 0.01m, false);
+                    SavingsAccount.CalculateSavingsInterest(1000, 10, 0.01m, false);
+                    Console.WriteLine("\n  Tryck Enter för att fortsätta");
+                    Console.ReadKey();
                     break;
                 case "Framtidskonto":
                     FutureAccount newFAccount = new FutureAccount(accountName, accountType, currency, _userId);
