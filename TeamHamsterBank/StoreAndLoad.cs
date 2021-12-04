@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace TeamHamsterBank
 {
@@ -95,10 +94,8 @@ namespace TeamHamsterBank
             }
         }
 
-        public static async void SaveAccounts()
+        public static void SaveAccounts()
         {
-
-            await Task.Delay(900000);
             try
             {
                 string save = String.Empty;
