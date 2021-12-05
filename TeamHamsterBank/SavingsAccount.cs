@@ -18,7 +18,7 @@ namespace TeamHamsterBank
         {
             if (showText)
             {
-                Console.WriteLine($"  På vårt sparkonto får du {_interest.ToString("#0.##%")} i månadssparränta\n  {deposit} kr är värda: \n");
+                Console.WriteLine($"  På vårt sparkonto får du {_interest.ToString("#0.##%")} i månadssparränta\n  {deposit} {currency} är värt: \n");
             }
 
             decimal amount = deposit;

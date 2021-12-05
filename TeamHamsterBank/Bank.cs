@@ -192,18 +192,29 @@ namespace TeamHamsterBank
             // Print amount after interest per year
             if (customer._accounts[index].AccountType == "Sparkonto")
             {
-                Console.WriteLine("  Vill du se hur mycket nuvarande summa på sparkontot kommer att öka med vår sparränta? Skriv 'Ja'");
-                string answer = Console.ReadLine().ToLower().Trim();
-                
-                if (answer == "ja")
+                Console.WriteLine("  Vill du se hur mycket nuvarande summa på sparkontot kommer att öka med vår sparränta? Svara 'Ja'/'Nej");
+
+                bool runAgain = false;
+                do 
                 {
-                    Console.Write("Ange antal år för ökning: ");
-                    int years = 0;
-                    Int32.TryParse(Console.ReadLine(), out years);
-                    Console.Clear();
-                    Console.WriteLine($"\n  Nuvarande summa {customer._accounts[index].Balance} {customer._accounts[index].Currency} på sparkontot kommer att vara värt:");
-                    SavingsAccount.CalculateSavingsInterest(customer._accounts[index].Balance, years, false, customer._accounts[index].Currency);
-                }
+                    string answer = Console.ReadLine().ToLower().Trim();
+
+                    if (answer == "ja")
+                    {
+                        Console.Write("Ange antal år för ökning: ");
+                        int years = 0;
+                        Int32.TryParse(Console.ReadLine(), out years);
+                        Console.Clear();
+                        Console.WriteLine($"\n  Nuvarande summa {customer._accounts[index].Balance} {customer._accounts[index].Currency} på sparkontot kommer att vara värt:\n");
+                        SavingsAccount.CalculateSavingsInterest(customer._accounts[index].Balance, years, false, customer._accounts[index].Currency);
+                        runAgain = false;
+                    }
+                    else if (answer != "ja" || answer != "nej")
+                    {
+                        Console.WriteLine("Svara 'Ja' eller 'Nej'");
+                        runAgain = true;
+                    }
+                } while (runAgain);
             }
             
         }
