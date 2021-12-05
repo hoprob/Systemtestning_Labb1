@@ -4,14 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Globalization;
 
 namespace TeamHamsterBank
 {
     class Bank
-    {
+    {        
         internal static List<User> UsersList = new List<User>();
         public static void Login()
-        {
+        {           
             Console.Clear();
             Console.Write("\n\n\t\tVälkommen till HamsterBanken\n\n\n" +
                     "\tVar god och skriv in ditt Användar-ID:  ");
@@ -649,7 +650,7 @@ namespace TeamHamsterBank
                 }
                 else if (_currency[0] == currency)
                 {
-                    transfer *= decimal.Parse(_currency[1]);
+                    transfer *= decimal.Parse(_currency[1], CultureInfo.InvariantCulture);
                     return;
                 }
             }
@@ -664,7 +665,7 @@ namespace TeamHamsterBank
                 }
                 else if (_currency[0] == currency)
                 {
-                    transfer /= decimal.Parse(_currency[1]);
+                    transfer /= decimal.Parse(_currency[1], CultureInfo.InvariantCulture);
                     return;
                 }
             }
