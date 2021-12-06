@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Text.RegularExpressions;
 
 namespace TeamHamsterBank
 {
@@ -43,17 +43,8 @@ namespace TeamHamsterBank
                 Console.Write("\n  Oglitligt namn. Ange ett fullständigt namn: ");
                 inputFullName = Console.ReadLine().Trim();
             }
-
             // Get password
-            Console.Write("  Ange ett lösenord: ");
-            string inputPassword = Console.ReadLine().Trim();
-            while (inputPassword.Length < 8)
-            {
-                Console.WriteLine("\n  Lösenordet måste vara minst 8 tecken. Vänligen ange ett annat lösenord.");
-                Console.Write("  Ange ett lösenord:");
-                inputPassword = Console.ReadLine().Trim();
-            }
-
+            string inputPassword = NewPassword();
             // Create a new customer object and add to UsersList
             Customer newCustomer = new Customer(userId, inputFullName, inputPassword);
             UsersList.Add(newCustomer);

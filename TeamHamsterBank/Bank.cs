@@ -107,7 +107,8 @@ namespace TeamHamsterBank
                     "  [3] Sätt in pengar \n\n" +
                     "  [4] Ta ut pengar \n\n" +
                     "  [5] Öppna ett nytt konto \n\n" +
-                    "  [6] Logga ut \n\n" +
+                    "  [6] Byta lösenord \n\n" +
+                    "  [7] Logga ut \n\n" +
                     "   \tVälj:  ", user.FullName);
                 Int32.TryParse(Console.ReadLine(), out int option);
                 switch (option)
@@ -157,7 +158,17 @@ namespace TeamHamsterBank
                         customer.CreateNewAccount();
                         Redirecting();
                         break;
-                    case 6:
+                    case 6://Change password
+                        Console.Clear();
+                        if(VerifyCustomer(customer))
+                        {
+                            Console.WriteLine();
+                            customer.ChangePassword();
+                            Console.WriteLine("\n\n\tLösenordet är ändrat!");
+                        }
+                        Redirecting();
+                        break;
+                    case 7:
                         Console.Clear();
                         Console.WriteLine("\n\n\n\n\t\tVälkommen åter :-)");
                         Thread.Sleep(1800);
@@ -697,7 +708,7 @@ namespace TeamHamsterBank
                 }
             }
         }
-        static string GetPassword()
+        public static string GetPassword()
         {
             StringBuilder password = new StringBuilder();
             ConsoleKeyInfo key;

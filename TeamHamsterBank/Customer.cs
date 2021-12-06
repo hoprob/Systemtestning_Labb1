@@ -140,6 +140,9 @@ namespace TeamHamsterBank
             Console.Clear();
             Console.WriteLine($"\n  Nytt {accountType.Trim()}, {accountName}, har skapats med valuta [{currency}].");
         }
-        
+       public void ChangePassword()
+        {
+            _password = NewPassword();
+        } 
     }
 }

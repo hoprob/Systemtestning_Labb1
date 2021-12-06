@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Text.RegularExpressions;
 
 namespace TeamHamsterBank
 {
@@ -48,6 +48,29 @@ namespace TeamHamsterBank
                     $"________Customer\n";
             }
             return details;
+        }
+        protected static string NewPassword()
+        {
+            Regex passCheck = new Regex(@"(?=.*[0-9])(?=.*[A-ZÅÄÖ]).{8,}$");
+            string inputPassword;
+            string validatePassword;
+            do
+            {
+                Console.Write("\n  Ange ett lösenord: ");
+                inputPassword = Bank.GetPassword();
+                while (!passCheck.IsMatch(inputPassword))
+                {
+                    Console.WriteLine("\n\n  Lösenordet måste vara minst 8 tecken," +
+                        " innehålla minst 1 siffra och minst 1 stor bokstav.\n" +
+                        "    Vänligen ange ett annat lösenord!");
+                    Console.Write("\n  Ange ett lösenord:");
+                    inputPassword = Bank.GetPassword();
+                }
+                Console.Write("\n\n   Vänligen vefifiera lösenordet: ");
+                validatePassword = Bank.GetPassword();
+                if (inputPassword != validatePassword) { Console.WriteLine("\n\n    Lösenorden matchar inte. Försök igen!"); }
+            } while (inputPassword != validatePassword);
+            return inputPassword;
         }
 
     }
