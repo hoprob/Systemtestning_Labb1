@@ -189,6 +189,36 @@ namespace TeamHamsterBank
                 customer._accounts[index].AccountNumber);
             Account.SubmitTransaction(customer, index, deposit);
             Console.WriteLine(Account.PrintAccounts(customer));
+
+            // Print amount after interest per year
+            if (customer._accounts[index].AccountType == "Sparkonto")
+            {
+                Console.WriteLine("\n  Vill du se hur mycket nuvarande summa på sparkontot kommer att öka med vår sparränta? Svara 'Ja'/'Nej");
+
+                bool runAgain = false;
+                do 
+                {
+                    Console.Write("\n  ");
+                    string answer = Console.ReadLine().ToLower().Trim();
+
+                    if (answer == "ja")
+                    {
+                        Console.Write("\n  Ange antal år för ökning: ");
+                        int years = 0;
+                        Int32.TryParse(Console.ReadLine(), out years);
+                        Console.Clear();
+                        Console.WriteLine($"\n  Nuvarande summa {customer._accounts[index].Balance} {customer._accounts[index].Currency} på sparkontot kommer att vara värt:\n");
+                        SavingsAccount.CalculateSavingsInterest(customer._accounts[index].Balance, years, false, customer._accounts[index].Currency);
+                        runAgain = false;
+                    }
+                    else if (answer != "ja" || answer != "nej")
+                    {
+                        Console.WriteLine("Svara 'Ja' eller 'Nej'");
+                        runAgain = true;
+                    }
+                } while (runAgain);
+            }
+            
         }
         static void Withdraw(Customer customer)
         {

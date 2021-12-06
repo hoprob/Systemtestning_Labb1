@@ -4,7 +4,11 @@ using System.Text;
 
 namespace TeamHamsterBank
 {
-    class FutureAccount
+    class FutureAccount : Account
     {
+        public FutureAccount(string accountName, string accountType, string currency, string customerID) 
+            : base(accountName, accountType, currency, customerID)
+        {
+        }
     }
 }

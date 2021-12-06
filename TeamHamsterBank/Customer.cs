@@ -78,7 +78,7 @@ namespace TeamHamsterBank
                 Console.Write("\n  Vänligen ange kontonamn: ");
                 accountName = Console.ReadLine().Trim();
 
-                if (accountName.Length > 15)
+                if (accountName.Length > 20)
                 {
                     Console.WriteLine("  Kontonamnet är för långt.");
                 }
@@ -106,8 +106,35 @@ namespace TeamHamsterBank
             } while (inputCurrency.Length != 3 || !(Account.CurrencyList.Exists(e => e[0].Contains(inputCurrency))));
 
             // Create a new account object and add to _accounts list
-            Account newAccount = new Account(accountName, accountType, currency, _userId);
-            _accounts.Add(newAccount);
+            switch (accountType)
+            {
+                case "Allkonto":
+                    MainAccount newMAccount = new MainAccount(accountName, accountType, currency, _userId);
+                    _accounts.Add(newMAccount);
+                    break;
+                case "Sparkonto":
+                    SavingsAccount newSAccount = new SavingsAccount(accountName, accountType, currency, _userId);
+                    _accounts.Add(newSAccount);
+
+                    Console.Clear(); // Prints an example of how much the money will be worth with interest
+                    SavingsAccount.CalculateSavingsInterest(1000, 0.5, true, currency); // 6 months
+                    SavingsAccount.CalculateSavingsInterest(1000, 1, false, currency); // 1 year
+                    SavingsAccount.CalculateSavingsInterest(1000, 5, false, currency); // 5 years
+                    SavingsAccount.CalculateSavingsInterest(1000, 10, false, currency); // 10 years
+                    Console.WriteLine("\n  Tryck Enter för att fortsätta");
+                    Console.ReadKey();
+                    break;
+                case "Framtidskonto":
+                    FutureAccount newFAccount = new FutureAccount(accountName, accountType, currency, _userId);
+                    _accounts.Add(newFAccount);
+                    break;
+                case "Investeringskonto":
+                    InvestmentAccount newIAccount = new InvestmentAccount(accountName, accountType, currency, _userId);
+                    _accounts.Add(newIAccount);
+                    break;
+                default:
+                    break;
+            }
 
             // Print details of new account
             Console.Clear();
