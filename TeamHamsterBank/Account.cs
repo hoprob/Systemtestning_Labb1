@@ -112,6 +112,12 @@ namespace TeamHamsterBank
         }
         public static void SelectAccount(Customer customer, int numberOfAccounts)
         {
+            if (customer._accounts.Count == 0)
+            {
+                Console.WriteLine("\n\n\t\tDu har inget registrerat konto." +
+                                        "  Var god och öppna ett nytt konto");
+                return;
+            }
             Console.Write("\n\tVälj ett konto och tryck 'Enter' eller tryck 'Enter' två gångar: ");
             Int32.TryParse(Console.ReadLine(), out int accountIndex);
             if ( accountIndex <= numberOfAccounts && accountIndex > 0 )

@@ -119,6 +119,14 @@ namespace TeamHamsterBank
                         Redirecting();
                         break;
                     case 2: // Transfer money
+                        if (customer._accounts.Count == 0)
+                        {
+                            Console.Clear();
+                            Console.WriteLine("\n\n\t\tDu har inget registrerat konto." +
+                                                    "  Var god och öppna ett nytt konto");
+                            Redirecting();
+                            break;
+                        }
                         string input;
                         do
                         {
@@ -167,6 +175,12 @@ namespace TeamHamsterBank
 
         static void Deposit(Customer customer)
         {
+            if (customer._accounts.Count == 0)
+            {
+                Console.WriteLine("\n\n\t\tDu har inget registrerat konto." +
+                                        "  Var god och öppna ett nytt konto");
+                return;
+            }
             int index = 0;
             while (index < 1 || index > customer._accounts.Count)
             {
@@ -222,6 +236,12 @@ namespace TeamHamsterBank
         }
         static void Withdraw(Customer customer)
         {
+            if (customer._accounts.Count == 0)
+            {
+                Console.WriteLine("\n\n\t\tDu har inget registrerat konto." +
+                                        "  Var god och öppna ett nytt konto");
+                return;
+            }
             int index = 0;
             while (index < 1 || index > customer._accounts.Count)
             {
@@ -283,6 +303,12 @@ namespace TeamHamsterBank
         }
         static void InternalTransfer(Customer customer)
         {
+            if (customer._accounts.Count == 1)
+            {
+                Console.WriteLine("\n\n\t\tDu har bara ett registrerat konto." +
+                                        "  Var god och öppna ett nytt konto");
+                return;
+            }
             int transferFrom;
             int transferTo;
             decimal transferSum;
