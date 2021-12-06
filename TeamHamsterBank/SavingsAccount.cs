@@ -6,15 +6,15 @@ namespace TeamHamsterBank
 {
     class SavingsAccount : Account
     {
-        public decimal _interest; // Delete?
+        public static decimal _interest;
 
         public SavingsAccount(string accountName, string accountType, string currency, string customerID) 
             : base (accountName, accountType, currency, customerID)
         {
-            _interest = 0.01m; // Delete?
+            _interest = 0.01m; 
         }
 
-        public static void CalculateSavingsInterest(decimal deposit, double years, bool showText, string currency, decimal _interest = 0.01m)
+        public static void CalculateSavingsInterest(decimal deposit, double years, bool showText, string currency)
         {
             if (showText)
             {

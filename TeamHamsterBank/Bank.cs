@@ -193,16 +193,17 @@ namespace TeamHamsterBank
             // Print amount after interest per year
             if (customer._accounts[index].AccountType == "Sparkonto")
             {
-                Console.WriteLine("  Vill du se hur mycket nuvarande summa på sparkontot kommer att öka med vår sparränta? Svara 'Ja'/'Nej");
+                Console.WriteLine("\n  Vill du se hur mycket nuvarande summa på sparkontot kommer att öka med vår sparränta? Svara 'Ja'/'Nej");
 
                 bool runAgain = false;
                 do 
                 {
+                    Console.Write("\n  ");
                     string answer = Console.ReadLine().ToLower().Trim();
 
                     if (answer == "ja")
                     {
-                        Console.Write("Ange antal år för ökning: ");
+                        Console.Write("\n  Ange antal år för ökning: ");
                         int years = 0;
                         Int32.TryParse(Console.ReadLine(), out years);
                         Console.Clear();
