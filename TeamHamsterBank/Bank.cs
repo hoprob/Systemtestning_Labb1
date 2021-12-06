@@ -107,7 +107,8 @@ namespace TeamHamsterBank
                     "  [3] Sätt in pengar \n\n" +
                     "  [4] Ta ut pengar \n\n" +
                     "  [5] Öppna ett nytt konto \n\n" +
-                    "  [6] Logga ut \n\n" +
+                    "  [6] Banklån \n\n" +
+                    "  [7] Logga ut \n\n" +
                     "   \tVälj:  ", user.FullName);
                 Int32.TryParse(Console.ReadLine(), out int option);
                 switch (option)
@@ -157,7 +158,11 @@ namespace TeamHamsterBank
                         customer.CreateNewAccount();
                         Redirecting();
                         break;
-                    case 6:
+                    case 6: // Bank loan
+                        Console.Clear();
+                        Account.BankLoan(customer);
+                        break;
+                    case 7:
                         Console.Clear();
                         Console.WriteLine("\n\n\n\n\t\tVälkommen åter :-)");
                         Thread.Sleep(1800);
@@ -225,7 +230,11 @@ namespace TeamHamsterBank
                         SavingsAccount.CalculateSavingsInterest(customer._accounts[index].Balance, years, false, customer._accounts[index].Currency);
                         runAgain = false;
                     }
-                    else if (answer != "ja" || answer != "nej")
+                    else if (answer == "nej")
+                    {
+                        runAgain = false;
+                    }
+                    else if (answer != "nej" || answer != "ja")
                     {
                         Console.WriteLine("Svara 'Ja' eller 'Nej'");
                         runAgain = true;

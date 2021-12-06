@@ -163,5 +163,42 @@ namespace TeamHamsterBank
                 Console.WriteLine($"    [{currency[0]}]\n");
             }
         }
+        public static void BankLoan(Customer customer)
+        {
+            Console.WriteLine("  * Banklån * \n");
+
+            // Checks the total balance the customer has
+            decimal totalBalance = 0;
+            
+            for (int i = 0; i < customer._accounts.Count; i++)
+            {
+                totalBalance =+ customer._accounts[i].Balance;
+            }
+
+            if (totalBalance >= 1000m)
+            {
+                // Customer can borrow double the current total balance
+                Console.WriteLine($"  Minimum summan för lån är 1000. Du kan låna mellan 1000 - {totalBalance * 2} baserat på ditt nuvarande kapital.\n");
+
+                // Input loan amount
+                Console.Write("  Vänligen ange hur mycket du vill låna: ");
+                decimal loanAmount = 0;
+                do
+                {
+                    Decimal.TryParse(Console.ReadLine(), out loanAmount);
+
+                    if (loanAmount > totalBalance * 2 || loanAmount < 1000m)
+                    {
+                        Console.WriteLine($"  Ogiltligt val. Vänligen ange en summa mellan 1000 - {totalBalance * 2}");
+                    }
+                } while (loanAmount > totalBalance * 2 || loanAmount < 1000m);
+
+                Console.WriteLine($"  Du har valt att låna {loanAmount}.\n");
+                Console.WriteLine(PrintAccounts(customer));
+                Console.ReadKey();
+            }
+            else { Console.WriteLine("  Du har inte tillräckligt med pengar för att låna från vår bank.\n\n  Vänligen tryck 'Enter' för att fortsätta"); }
+            Console.ReadKey();
+        }
     }
 }
