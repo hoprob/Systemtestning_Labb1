@@ -71,7 +71,6 @@ namespace TeamHamsterBank
             _currency=currency;
             _customerID = customerID;
         }
-        /*Radlängd 80*******************************************************************/
         public string ToSave()
         {
 
@@ -89,23 +88,24 @@ namespace TeamHamsterBank
             string accountName = string.Empty;
             string accountType = string.Empty;
             
-            output.Append("\t╔═══╤═══════════╤══════════════╤════════════╤═════════════╤══════╗\n" +
-                          "\t║Val│Kontonummer│    Namn      │  Kontotyp  │    Saldo    │Valuta║\n" +
-                          "\t╠═══╪═══════════╪══════════════╪════════════╪═════════════╪══════╣\n");
+            output.Append("\t╔═══╤═══════════╤══════════════╤════════════╤════════════════════╤══════╗\n" +
+                          "\t║Val│Kontonummer│    Namn      │  Kontotyp  │        Saldo       │Valuta║\n" +
+                          "\t╠═══╪═══════════╪══════════════╪════════════╪════════════════════╪══════╣\n");
             for (int i = 0; i < customer._accounts.Count; i++)
             {
                 accountName = customer._accounts[i]._accountName;
                 accountType = customer._accounts[i]._accountType;
+                string balanceOutput = $"{customer._accounts[i]._balance:0.00}";
                 if ((accountName = customer._accounts[i]._accountName).Length > 14)
                     accountName = accountName.Remove(14);
                 if ((accountType = customer._accounts[i]._accountType).Length > 12)
                     accountType = accountType.Remove(12);
-                output.Append(String.Format("\t║{0,-3}│{1,-11}│{2,-14}│{3,-12}│{4,13}│{5,-6}║\n",
+                output.Append(String.Format("\t║{0,-3}│{1,-11}│{2,-14}│{3,-12}│{4,20}│{5,-6}║\n",
                     i + 1, customer._accounts[i]._accountNum, accountName, accountType,
-                    customer._accounts[i]._balance, customer._accounts[i]._currency));
-                output.Append("\t╟───┼───────────┼──────────────┼────────────┼─────────────┼──────╢\n");
+                    balanceOutput, customer._accounts[i]._currency));
+                output.Append("\t╟───┼───────────┼──────────────┼────────────┼────────────────────┼──────╢\n");
             }
-            output.Append("\t╚═══╧═══════════╧══════════════╧════════════╧═════════════╧══════╝");
+            output.Append("\t╚═══╧═══════════╧══════════════╧════════════╧════════════════════╧══════╝");
             return $"\n\n{output.ToString()}";
         }
         public static void SelectAccount(Customer customer, int numberOfAccounts)

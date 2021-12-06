@@ -6,6 +6,7 @@ namespace TeamHamsterBank
     {
         static void Main(string[] args)
         {
+            HamsterArt.HamsterWelcome();
             StoreAndLoad.LoadAccounts();
             StoreAndLoad.LoadUsers();
 
