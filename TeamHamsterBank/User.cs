@@ -54,24 +54,46 @@ namespace TeamHamsterBank
             Regex passCheck = new Regex(@"(?=.*[0-9])(?=.*[A-ZÅÄÖ]).{8,}$");
             string inputPassword;
             string validatePassword;
+            Bank.ReturnInstruction(0);
             do
             {
-                Console.Write("\n  Ange ett lösenord: ");
+                Console.Write("\n\n\n\n  Ange ett lösenord: ");
                 inputPassword = Bank.GetPassword();
-                while (!passCheck.IsMatch(inputPassword))
+                while (!passCheck.IsMatch(inputPassword) && inputPassword.ToUpper() != "R")
                 {
+                    Console.Clear();
+                    Bank.ReturnInstruction(0);
                     Console.WriteLine("\n\n  Lösenordet måste vara minst 8 tecken," +
                         " innehålla minst 1 siffra och minst 1 stor bokstav.\n" +
                         "    Vänligen ange ett annat lösenord!");
                     Console.Write("\n  Ange ett lösenord:");
                     inputPassword = Bank.GetPassword();
                 }
+                if (inputPassword.ToUpper() == "R")
+                    return inputPassword;
                 Console.Write("\n\n   Vänligen vefifiera lösenordet: ");
                 validatePassword = Bank.GetPassword();
-                if (inputPassword != validatePassword) { Console.WriteLine("\n\n    Lösenorden matchar inte. Försök igen!"); }
+                if (validatePassword.ToUpper() == "R")
+                    return validatePassword;
+                if (inputPassword != validatePassword)
+                { 
+                    Console.Clear();
+                    Bank.ReturnInstruction(0);
+                    Console.WriteLine("\n\n    Lösenorden matchar inte. Försök igen!");
+                }
             } while (inputPassword != validatePassword);
             return inputPassword;
         }
-
+        public bool ChangePassword()
+        {
+            string newPassword = NewPassword();
+            if (newPassword.ToUpper() != "R")
+            {
+                _password = newPassword;
+                return true;
+            }
+            else
+                return false;
+        }
     }
 }
