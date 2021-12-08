@@ -107,7 +107,7 @@ namespace TeamHamsterBank
                     "  [3] Sätt in pengar \n\n" +
                     "  [4] Ta ut pengar \n\n" +
                     "  [5] Öppna ett nytt konto \n\n" +
-                    "  [6] Banklån \n\n" +
+                    "  [6] Byta lösenord \n\n" +
                     "  [7] Logga ut \n\n" +
                     "   \tVälj:  ", user.FullName);
                 Int32.TryParse(Console.ReadLine(), out int option);
@@ -158,9 +158,19 @@ namespace TeamHamsterBank
                         customer.CreateNewAccount();
                         Redirecting();
                         break;
-                    case 6: // Bank loan
+                    case 6://Change password
                         Console.Clear();
-                        Account.BankLoan(customer);
+                        if(VerifyCustomer(customer))
+                        {
+                            Console.Clear();
+                            Console.WriteLine("\n\t**Ändra Lösenord**");
+                            if(customer.ChangePassword())
+                            {
+                                Console.Clear();
+                                Console.WriteLine("\n\n\n\t\tLösenordet är ändrat!");
+                                Thread.Sleep(1800);
+                            }
+                        }                       
                         break;
                     case 7:
                         Console.Clear();
@@ -420,8 +430,9 @@ namespace TeamHamsterBank
                 }
             } while (transferBool);
         }
-        static void AdminMenu(User admin)
+        static void AdminMenu(User user)
         {
+            Admin admin = user as Admin;
             bool run = true;
             while (run)
             {
@@ -431,7 +442,9 @@ namespace TeamHamsterBank
                     "  [1] Registrera en ny kund  \n\n" +
                     "  [2] Uppdatera växelkurser för alla valutor  (API-samtal)\n\n" +
                     "  [3] Sätt in växelkurser för en valuta \n\n" +
-                    "  [4] Logga ut \n\n" +
+                    "  [4] Ändra en annan användares lösenord \n\n" +
+                    "  [5] Ändra eget lösenord \n\n" +
+                    "  [6] Logga ut \n\n" +
                     "   \tVälj:  ", admin.FullName);
                 Int32.TryParse(Console.ReadLine(), out int option);
                 switch (option)
@@ -452,7 +465,21 @@ namespace TeamHamsterBank
                         Admin.SetCurrencyRate();
                         Redirecting();
                         break;
-                    case 4:
+                    case 4://Change other users password
+                        Console.Clear();
+                        admin.ChangeUserPassword(UsersList);
+                        break;
+                    case 5://Change admin password
+                        Console.Clear();
+                        Console.WriteLine("\n\t**Ändra Lösenord**");
+                        if (admin.ChangePassword())
+                        {
+                            Console.Clear();
+                            Console.WriteLine("\n\n\n\t\tLösenordet är ändrat!");
+                            Thread.Sleep(1800);
+                        }
+                        break;
+                    case 6:
                         Console.Clear();
                         Console.WriteLine("\n\n\n\n\t\tVälkommen åter :-)");
                         Thread.Sleep(1800);
@@ -626,7 +653,7 @@ namespace TeamHamsterBank
                 }
             } while (transferBool);
         }
-        static void ReturnInstruction(int addRow)
+        public static void ReturnInstruction(int addRow)
         {
             Console.SetCursorPosition(5, 15 + addRow);
             Console.Write("Mata in \"R\" för att avbryta!");
@@ -706,7 +733,7 @@ namespace TeamHamsterBank
                 }
             }
         }
-        static string GetPassword()
+        public static string GetPassword()
         {
             StringBuilder password = new StringBuilder();
             ConsoleKeyInfo key;

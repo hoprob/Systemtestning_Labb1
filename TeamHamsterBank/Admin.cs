@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace TeamHamsterBank
 {
@@ -43,17 +44,8 @@ namespace TeamHamsterBank
                 Console.Write("\n  Oglitligt namn. Ange ett fullständigt namn: ");
                 inputFullName = Console.ReadLine().Trim();
             }
-
             // Get password
-            Console.Write("  Ange ett lösenord: ");
-            string inputPassword = Console.ReadLine().Trim();
-            while (inputPassword.Length < 8)
-            {
-                Console.WriteLine("\n  Lösenordet måste vara minst 8 tecken. Vänligen ange ett annat lösenord.");
-                Console.Write("  Ange ett lösenord:");
-                inputPassword = Console.ReadLine().Trim();
-            }
-
+            string inputPassword = NewPassword();
             // Create a new customer object and add to UsersList
             Customer newCustomer = new Customer(userId, inputFullName, inputPassword);
             UsersList.Add(newCustomer);
@@ -86,6 +78,60 @@ namespace TeamHamsterBank
 
             Console.WriteLine(Account.CurrencyList[index][1]);
             Bank.PrintCurrentExchange();
+        }
+        public void ChangeUserPassword(List<User> users)
+        {
+            int id;
+            string input;
+            bool errorBool = false;
+            Bank.ReturnInstruction(0);
+            do
+            {
+                Console.Write("\n\n\tSkriv in ID för användaren du vill ändra" +
+                    " lösenord på: ");
+                input = Console.ReadLine();
+                if (Int32.TryParse(input, out id) && id.ToString().Length == 6)
+                {
+                    errorBool = false;
+                    if (users.Exists(u => u.UserID == id.ToString()))
+                    {
+                        User temp = users.Find(u => u.UserID == id.ToString());
+                        Console.Clear();
+                        Bank.ReturnInstruction(0);
+                        Console.WriteLine($"\n\n\t**Ändra lösenord för användare" +
+                            $" [{temp.UserID}] [{temp.FullName}]**");
+                        if (temp.ChangePassword())
+                        {
+                            Console.Clear();
+                            Console.WriteLine("\n\n\n\t\tLösenordet är nu ändrat!");
+                            Thread.Sleep(1800);
+                        }
+                        errorBool = false;
+                    }
+                    else
+                    {
+                        Console.Clear();
+                        Bank.ReturnInstruction(0);
+                        Console.WriteLine($"\n\n\tAnvändare med ID: [{id}]" +
+                            $" finns EJ registerad!\n\n");
+                        errorBool = true;
+                    }
+                }
+                else if(input.ToUpper() == "R")
+                {
+                    errorBool = false;
+                }
+                else
+                {
+                    //Fel inmatning
+                    Console.Clear();
+                    Bank.ReturnInstruction(0);
+                    Console.WriteLine("\n\n\tFel inmatning! Var vänlig mata in ett" +
+                        " 6-siffrigt ID!\n\n");
+                    errorBool = true;
+                }
+            } while (errorBool);
+
         }
     }
 }
