@@ -176,8 +176,10 @@ namespace TeamHamsterBank
 
             if (totalBalance >= 1000m)
             {
+                decimal maxLoanAmount = totalBalance * 2;
                 // Customer can borrow double the current total balance
-                Console.WriteLine($"  Minimumsumman för lån är 1000. Du kan låna mellan 1000,00 - {totalBalance * 2} baserat på ditt nuvarande kapital.\n");
+                Console.WriteLine($"  Minimumsumman för lån är 1000,00 [SEK]. " +
+                    $"Du kan låna mellan 1000,00 - {maxLoanAmount.ToString("F")} [SEK] baserat på ditt nuvarande kapital.\n");
                 Console.WriteLine($"  Vi har en engångsavgift på 10% och månadsräntan är 5% av lånsumman\n");
 
                 // Input loan amount
@@ -189,13 +191,13 @@ namespace TeamHamsterBank
 
                     if (loanAmount > totalBalance * 2 || loanAmount < 1000m)
                     {
-                        Console.WriteLine($"  Ogiltligt val. Vänligen ange en summa mellan 1000 - {totalBalance * 2}");
+                        Console.WriteLine($"  Ogiltligt val. Vänligen ange en summa mellan 1000 - {maxLoanAmount.ToString("F")} [SEK]");
                     }
                 } while (loanAmount > totalBalance * 2 || loanAmount < 1000m);
 
                 Console.Clear();
-                Console.WriteLine($"  Du har valt att låna {loanAmount}\n");
-                Console.WriteLine($"  Engångsavgift\t {loanAmount * 0.1m}\n");
+                Console.WriteLine($"  Du har valt att låna {loanAmount.ToString("F")} [SEK]\n");
+                Console.WriteLine($"  Engångsavgift\t {(loanAmount * 0.1m).ToString("F")} [SEK]\n");
 
                 decimal interestCost = 0;
                 int months = 0;
@@ -207,9 +209,9 @@ namespace TeamHamsterBank
                     months++;
                 }
 
-                Console.WriteLine($"  Du måste minst betala av 100 kr per månad och om du betalar av minimumsumman: \n" +
+                Console.WriteLine($"  Du måste minst betala av 100 [SEK] per månad och om du betalar av minimumsumman: \n" +
                     $"  Har du betalat av lånet efter {months} månader \n" +
-                    $"  kostnaden för räntan blir {interestCost}");
+                    $"  Kostnaden för räntan blir {interestCost.ToString("F")} [SEK]");
 
                 // Account selection and transfer
                 Console.WriteLine(PrintAccounts(customer));
@@ -220,11 +222,14 @@ namespace TeamHamsterBank
                     Int32.TryParse(Console.ReadLine(), out index);
                 }
                 index += -1;
+                string bankCurrency = customer._accounts[index].Currency; // Exchange currency if the to account is not SEK
+                Bank.ExchangeBack(ref loanAmount, ref bankCurrency);
+
                 customer._accounts[index].Balance += loanAmount;
 
                 // Print summary
                 Console.Clear();
-                Console.Write($"\n\n   '{loanAmount}' har lagts till [{customer._accounts[index].AccountNumber}]");
+                Console.Write($"\n\n   '{loanAmount.ToString("F")}' har lagts till [{customer._accounts[index].AccountNumber}]");
                 Account.SubmitTransaction(customer, index, loanAmountLeft);
                 Console.WriteLine(Account.PrintAccounts(customer));
                 Console.ReadKey();
