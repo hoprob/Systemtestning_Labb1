@@ -108,7 +108,8 @@ namespace TeamHamsterBank
                     "  [4] Ta ut pengar \n\n" +
                     "  [5] Öppna ett nytt konto \n\n" +
                     "  [6] Byta lösenord \n\n" +
-                    "  [7] Logga ut \n\n" +
+                    "  [7] Banklån \n\n" +
+                    "  [8] Logga ut \n\n" +
                     "   \tVälj:  ", user.FullName);
                 Int32.TryParse(Console.ReadLine(), out int option);
                 switch (option)
@@ -173,6 +174,11 @@ namespace TeamHamsterBank
                         }                       
                         break;
                     case 7:
+                        Console.Clear();
+                        Account.BankLoan(customer);
+                        Redirecting();
+                        break;
+                    case 8:
                         Console.Clear();
                         Console.WriteLine("\n\n\n\n\t\tVälkommen åter :-)");
                         Thread.Sleep(1800);
