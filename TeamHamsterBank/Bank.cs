@@ -5,12 +5,16 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Globalization;
+using System.Threading.Tasks;
+using System.Timers;
 
 namespace TeamHamsterBank
 {
     class Bank
-    {        
+    {
+        static System.Timers.Timer aTimer;
         internal static List<User> UsersList = new List<User>();
+        internal static List<Task> UpcomingTransactions = new List<Task>();
         public static void Login()
         {           
             Console.Clear();
@@ -108,7 +112,8 @@ namespace TeamHamsterBank
                     "  [4] Ta ut pengar \n\n" +
                     "  [5] Öppna ett nytt konto \n\n" +
                     "  [6] Byta lösenord \n\n" +
-                    "  [7] Logga ut \n\n" +
+                    "  [7] Banklån \n\n" +
+                    "  [8] Logga ut \n\n" +
                     "   \tVälj:  ", user.FullName);
                 Int32.TryParse(Console.ReadLine(), out int option);
                 switch (option)
@@ -173,6 +178,11 @@ namespace TeamHamsterBank
                         }                       
                         break;
                     case 7:
+                        Console.Clear();
+                        Account.BankLoan(customer);
+                        Redirecting();
+                        break;
+                    case 8:
                         Console.Clear();
                         Console.WriteLine("\n\n\n\n\t\tVälkommen åter :-)");
                         Thread.Sleep(1800);
@@ -240,7 +250,11 @@ namespace TeamHamsterBank
                         SavingsAccount.CalculateSavingsInterest(customer._accounts[index].Balance, years, false, customer._accounts[index].Currency);
                         runAgain = false;
                     }
-                    else if (answer != "ja" || answer != "nej")
+                    else if (answer == "nej")
+                    {
+                        runAgain = false;
+                    }
+                    else if (answer != "nej" || answer != "ja")
                     {
                         Console.WriteLine("Svara 'Ja' eller 'Nej'");
                         runAgain = true;
@@ -574,19 +588,21 @@ namespace TeamHamsterBank
                                             {
                                                 //Makes transfer and prints to log.
                                                 customer._accounts[fromAccount].
-                                                MakeTransfer(transferSum,
+                                                MakeExternalTransfer(transferSum,
                                                 toAccount);
                                                 Console.Clear();
                                                 Console.WriteLine("\nÖverföring " +
                                                     "genomförd!\n\nNytt saldo är:\n");
                                                 Console.WriteLine(customer.
                                                     _accounts[fromAccount]);
+                                                UpcomingTransactions.Add(new Task(() =>
+                                                {
+                                                    Account.SubmitTransaction(toCustomer,
+                                                    toCustomer._accounts.FindIndex
+                                                    (a => a.Equals(toAccount)), transferSum);
+                                                }));
                                                 Account.SubmitTransaction(customer,
                                                     fromAccount, transferSum);
-                                                Account.SubmitTransaction(toCustomer,
-                                                    toCustomer._accounts.FindIndex
-                                                    (a => a.Equals(toAccount)),
-                                                    transferSum);
                                                 transferBool = false;
                                             } 
                                             else { transferBool = false; }
@@ -765,6 +781,24 @@ namespace TeamHamsterBank
                 }
             }
             return password.ToString();
+        }
+        internal static void TransactionProcessTimer()
+        {
+            // Create a timer with a two second interval.
+            aTimer = new System.Timers.Timer(900000);
+            // Hook up the Elapsed event for the timer. 
+            aTimer.Elapsed += OnTimedEvent;
+            aTimer.AutoReset = true;
+            aTimer.Enabled = true;
+        }
+        static void OnTimedEvent(Object source, ElapsedEventArgs e)
+        {
+            foreach (Task task in UpcomingTransactions)
+            {
+                task.Start();
+            }
+            UpcomingTransactions.Clear();
+            StoreAndLoad.SaveAccounts();
         }
     }
 }

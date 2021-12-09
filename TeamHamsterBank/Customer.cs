@@ -33,7 +33,8 @@ namespace TeamHamsterBank
                 "  [1] Allkonto\n" +
                 "  [2] Sparkonto\n" +
                 "  [3] Framtidskonto\n" +
-                "  [4] Investeringskonto\n");
+                "  [4] Investeringskonto\n" +
+                "  [5] Kreditkonto\n");
 
             string accountType = String.Empty;
             bool rerunSelection;
@@ -60,6 +61,10 @@ namespace TeamHamsterBank
                         break;
                     case 4:
                         accountType = "Investeringskonto";
+                        rerunSelection = false;
+                        break;
+                    case 5:
+                        accountType = "Kreditkonto";
                         rerunSelection = false;
                         break;
                     default:
@@ -131,6 +136,10 @@ namespace TeamHamsterBank
                 case "Investeringskonto":
                     InvestmentAccount newIAccount = new InvestmentAccount(accountName, accountType, currency, _userId);
                     _accounts.Add(newIAccount);
+                    break;
+                case "Kreditkonto":
+                    CreditAccount newCAccount = new CreditAccount(accountName, accountType, currency, _userId);
+                    _accounts.Add(newCAccount);
                     break;
                 default:
                     break;

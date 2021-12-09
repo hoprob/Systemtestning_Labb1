@@ -7,9 +7,9 @@ namespace TeamHamsterBank
         static void Main(string[] args)
         {
             HamsterArt.HamsterWelcome();
+            Bank.TransactionProcessTimer();
             StoreAndLoad.LoadAccounts();
             StoreAndLoad.LoadUsers();
-
             Bank.Login();
         }
     }

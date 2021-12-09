@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace TeamHamsterBank
 {
@@ -155,6 +156,19 @@ namespace TeamHamsterBank
             Bank.ExchangeBack(ref transferSum, ref toAccount._currency);
             toAccount._balance += transferSum;
         }
+        public void MakeExternalTransfer(decimal transferSum, Account toAccount)
+        {
+
+            this._balance -= transferSum;
+            Bank.ExchangeCurrency(ref transferSum, ref _currency);
+            Bank.ExchangeBack(ref transferSum, ref toAccount._currency);
+            Bank.UpcomingTransactions.Add(new Task(() =>
+            {
+                toAccount._balance += transferSum;
+
+            }));
+
+        }
         public static void PrintCurrencies() // Prints available currencies in the bank
         {
             Console.WriteLine("  * Tillgängliga valutor *\n");
@@ -162,6 +176,88 @@ namespace TeamHamsterBank
             {
                 Console.WriteLine($"    [{currency[0]}]\n");
             }
+        }
+        public static void BankLoan(Customer customer)
+        {
+            Console.WriteLine("  * Banklån * \n");
+
+            //bool hasCreditAccount = false;
+
+            // Checks the total balance the customer has and if the customer has a credit account
+            decimal totalBalance = 0;
+            for (int i = 0; i < customer._accounts.Count; i++)
+            {
+                totalBalance = totalBalance + customer._accounts[i].Balance;
+
+                //if (customer._accounts[i].AccountType == "Kreditkonto")
+                //{
+                //    hasCreditAccount = true;
+                //}
+            }
+
+            if (totalBalance >= 1000m)
+            {
+                decimal maxLoanAmount = totalBalance * 2;
+                // Customer can borrow double the current total balance
+                Console.WriteLine($"  Minimumsumman för lån är 1000,00 [SEK]. " +
+                    $"Du kan låna mellan 1000,00 - {maxLoanAmount.ToString("F")} [SEK] baserat på ditt nuvarande kapital.\n");
+                Console.WriteLine($"  Vi har en engångsavgift på 10% och månadsräntan är 5% av lånsumman\n");
+
+                // Input loan amount
+                Console.Write("  Vänligen ange hur mycket du vill låna: ");
+                decimal loanAmount = 0;
+                do
+                {
+                    Decimal.TryParse(Console.ReadLine(), out loanAmount);
+
+                    if (loanAmount > totalBalance * 2 || loanAmount < 1000m)
+                    {
+                        Console.WriteLine($"  Ogiltligt val. Vänligen ange en summa mellan 1000 - {maxLoanAmount.ToString("F")} [SEK]");
+                    }
+                } while (loanAmount > totalBalance * 2 || loanAmount < 1000m);
+
+                Console.Clear();
+                Console.WriteLine($"  Du har valt att låna {loanAmount.ToString("F")} [SEK]\n");
+                Console.WriteLine($"  Engångsavgift\t {(loanAmount * 0.1m).ToString("F")} [SEK]\n");
+
+                decimal interestCost = 0;
+                int months = 0;
+                decimal loanAmountLeft = loanAmount;
+                while (loanAmountLeft > 0m)
+                {
+                    interestCost = interestCost + (loanAmountLeft * 0.05m);
+                    loanAmountLeft = loanAmountLeft - 100;
+                    months++;
+                }
+
+                Console.WriteLine($"  Du måste minst betala av 100 [SEK] per månad och om du betalar av minimumsumman: \n" +
+                    $"  Har du betalat av lånet efter {months} månader \n" +
+                    $"  Kostnaden för räntan blir {interestCost.ToString("F")} [SEK]");
+
+                // Account selection and transfer
+                Console.WriteLine(PrintAccounts(customer));
+                int index = 0;
+                while (index < 1 || index > customer._accounts.Count)
+                {
+                    Console.Write("\n\n   Välj vilket konto du vill överföra pengarna till:   ");
+                    Int32.TryParse(Console.ReadLine(), out index);
+                }
+                index += -1;
+                string bankCurrency = customer._accounts[index].Currency; // Exchange currency if the to account is not SEK
+                Bank.ExchangeBack(ref loanAmount, ref bankCurrency);
+
+                customer._accounts[index].Balance += loanAmount;
+
+                // Print summary
+                Console.Clear();
+                Console.Write($"\n\n   '{loanAmount.ToString("F")}' har lagts till [{customer._accounts[index].AccountNumber}]");
+                Account.SubmitTransaction(customer, index, loanAmountLeft);
+                Console.WriteLine(Account.PrintAccounts(customer));
+                Console.ReadKey();
+            }
+            // If the customer doesn't have enough money for a loan
+            else { Console.WriteLine("  Du har inte tillräckligt med pengar för att låna från vår bank.\n\n  Vänligen tryck 'Enter' för att fortsätta"); }
+            Console.ReadKey();
         }
     }
 }
