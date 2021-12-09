@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace TeamHamsterBank
 {
@@ -154,6 +155,19 @@ namespace TeamHamsterBank
             Bank.ExchangeCurrency( ref transferSum, ref _currency);
             Bank.ExchangeBack(ref transferSum, ref toAccount._currency);
             toAccount._balance += transferSum;
+        }
+        public void MakeExternalTransfer(decimal transferSum, Account toAccount)
+        {
+
+            this._balance -= transferSum;
+            Bank.ExchangeCurrency(ref transferSum, ref _currency);
+            Bank.ExchangeBack(ref transferSum, ref toAccount._currency);
+            Bank.UpcomingTransactions.Add(new Task(() =>
+            {
+                toAccount._balance += transferSum;
+
+            }));
+
         }
         public static void PrintCurrencies() // Prints available currencies in the bank
         {
