@@ -180,7 +180,7 @@ namespace TeamHamsterBank
                         break;
                     default:
                         Console.WriteLine("\t\tOgiltig inmatning!   " +
-                        "Var god och välj från 1 - 6\n");
+                        "Var god och välj från 1 - 7\n");
                         Console.ReadKey();
                         break;
                 }
@@ -483,7 +483,7 @@ namespace TeamHamsterBank
                         break;
                     default:
                         Console.WriteLine("\t\tOgiltig inmatning!   " +
-                        "Var god och välj från 1 - 4\n");
+                        "Var god och välj från 1 - 6\n");
                         Console.ReadKey();
                         break;
                 }
