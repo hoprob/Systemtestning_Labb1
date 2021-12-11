@@ -8,8 +8,9 @@ namespace TeamHamsterBank
 {
     static class StoreAndLoad
     {
-        public static List<string[]> AccountFile = new List<string[]>();
-        public static List<string[]> UsersFile = new List<string[]>();
+        internal static List<string[]> AccountFile = new List<string[]>();
+        internal static List<string[]> UsersFile = new List<string[]>();
+        internal static List<string[]> TransactionsFile = new List<string[]>();
         private static List<string> _fileLines;
         public static void LoadAccounts()
         {
@@ -79,6 +80,39 @@ namespace TeamHamsterBank
                 Environment.Exit(0);
             }
         }
+        public static void LoadTransactions()
+        {
+           try
+            {
+                if (File.Exists("Transactions.txt"))
+                {
+                    _fileLines = File.ReadAllLines
+                        ("Transactions.txt", Encoding.Default).ToList();
+                }
+                else if (File.Exists("Transactions - Backup.txt"))
+                {
+                    _fileLines = File.ReadAllLines
+                        ("Transactions - Backup.txt", Encoding.Default).ToList();
+                }
+                else
+                {
+                    throw new Exception("\n\n\n\t\tSystemunderhåll pågår!   " +
+                        "Vi beklagar stilleståndet\n\n\t" +
+                        " Tryck 'Enter för att avsluta tjänsten'");
+                }
+                for (int i = 0; i < _fileLines.Count; i++)
+                {
+                    TransactionsFile.Add(_fileLines[i].Split(new string[]
+                    { "________" }, StringSplitOptions.None));
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Console.ReadKey();
+                Environment.Exit(0);
+            }
+        }
         public static void DeclareUsers()
         {
             foreach (var user in UsersFile)
@@ -128,6 +162,24 @@ namespace TeamHamsterBank
                     save += user.ToSave();
                 }
                 File.WriteAllText("Users.txt", save,
+                    Encoding.Default);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+        public static void SaveTransactions()
+        {
+            try
+            {
+                string save = String.Empty;
+                foreach (string[] transaction in TransactionsFile)
+                {
+                    save +=$"{transaction[0]}________{transaction[1]}" +
+                        $"________{transaction[2]}________{transaction[3]}\n";
+                }
+                File.WriteAllText("Transactions.txt", save,
                     Encoding.Default);
             }
             catch (Exception e)
