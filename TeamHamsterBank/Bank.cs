@@ -299,14 +299,23 @@ namespace TeamHamsterBank
             }
             else // If credit account
             {
-                Console.Write("\n   Var vänlig och bekräfta hur mycket du vill ta ut:   ");
-                Decimal.TryParse(Console.ReadLine(), out withdrawal);
-
-                while (withdrawal < 1)
+                string currency = customer._accounts[index].Currency;
+                decimal maxWithdrawal = 10000m;
+                if (currency != "SEK") // Exchange the maximum amount to withdraw if not SEK
                 {
-                    Console.Write("\n\n   Ogiltlig summa. Var vänlig och bekräfta hur mycket du vill ta ut:   ");
+                    Bank.ExchangeBack(ref maxWithdrawal, ref currency);
                 }
 
+                Console.Write($"\n   Maxsumman du kan ta ut är {maxWithdrawal.ToString("F")} {customer._accounts[index].Currency}\n" +
+                    "   Var vänlig och bekräfta hur mycket du vill ta ut:   ");
+                Decimal.TryParse(Console.ReadLine(), out withdrawal);
+
+                while (withdrawal < 1 || withdrawal > maxWithdrawal)
+                {
+                    Console.Write("\n\n   Ogiltlig summa. Var vänlig och bekräfta hur mycket du vill ta ut:   ");
+                    Decimal.TryParse(Console.ReadLine(), out withdrawal);
+                }
+                // Calculate and print out the debt for the withdrawal
                 CreditAccount.CalculateCreditInterest(withdrawal, customer._accounts[index].Currency);
             }
                 

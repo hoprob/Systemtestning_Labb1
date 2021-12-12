@@ -181,18 +181,11 @@ namespace TeamHamsterBank
         {
             Console.WriteLine("  * Banklån * \n");
 
-            //bool hasCreditAccount = false;
-
-            // Checks the total balance the customer has and if the customer has a credit account
+            // Checks the total balance the customer has 
             decimal totalBalance = 0;
             for (int i = 0; i < customer._accounts.Count; i++)
             {
                 totalBalance = totalBalance + customer._accounts[i].Balance;
-
-                //if (customer._accounts[i].AccountType == "Kreditkonto")
-                //{
-                //    hasCreditAccount = true;
-                //}
             }
 
             if (totalBalance >= 1000m)
