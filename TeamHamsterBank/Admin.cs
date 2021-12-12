@@ -117,7 +117,7 @@ namespace TeamHamsterBank
                         errorBool = true;
                     }
                 }
-                else if(input.ToUpper() == "R")
+                else if (input.ToUpper() == "R")
                 {
                     errorBool = false;
                 }
@@ -131,6 +131,39 @@ namespace TeamHamsterBank
                     errorBool = true;
                 }
             } while (errorBool);
+        }
+        internal static void DeleteUser()
+        {
+            string inputUser_ID = String.Empty;
+            string username = String.Empty;
+            int index;
+            while (true)
+            {
+                Console.Clear();
+                Bank.ReturnInstruction(0);
+                Console.CursorVisible = true;
+                Console.Write("\n\n\tSkriv in användar-ID du vill ta bort: ");
+                inputUser_ID = Console.ReadLine().Trim();
+                if (inputUser_ID.ToUpper() == "R")
+                {
+                    return;
+                }
+                else if (CheckUserName(Bank.UsersList, inputUser_ID))
+                {
+                    index = Bank.UsersList.FindIndex(user => user.UserID == inputUser_ID);
+                    username = Bank.UsersList[index].FullName;
+                    Bank.UsersList.RemoveAt(index);
+                    Console.Write($"\n\n\t  {username} avlägsnades från Hamsterbanken");
+                    Bank.Redirecting();
+                    return;
+                }
+                else if (inputUser_ID != "")
+                {
+                    Console.Write($"\n\n\t{inputUser_ID} finns inte i systemet");
+                    Console.CursorVisible = false;
+                    Console.ReadKey();
+                }
+            }
 
         }
     }

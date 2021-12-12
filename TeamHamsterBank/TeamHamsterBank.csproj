@@ -7,11 +7,15 @@
 
   <ItemGroup>
     <None Remove="Accounts - Backup.txt" />
+    <None Remove="Transactions - Backup.txt" />
     <None Remove="Users - Backup.txt" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Accounts - Backup.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Transactions - Backup.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Users - Backup.txt">

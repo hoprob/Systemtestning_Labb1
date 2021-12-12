@@ -8,6 +8,7 @@ namespace TeamHamsterBank
         {
             HamsterArt.HamsterWelcome();
             Bank.TransactionProcessTimer();
+            StoreAndLoad.LoadTransactions();
             StoreAndLoad.LoadAccounts();
             StoreAndLoad.LoadUsers();
             Bank.Login();
