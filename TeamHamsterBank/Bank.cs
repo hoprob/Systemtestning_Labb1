@@ -283,6 +283,8 @@ namespace TeamHamsterBank
             index += -1;
             decimal withdrawal = 0;
             decimal balance = customer._accounts[index].Balance;
+            string currency = customer._accounts[index].Currency;
+
             if (customer._accounts[index].AccountType != "Kreditkonto") // if not a credit account
             {
                 if (balance < 1)
@@ -301,7 +303,6 @@ namespace TeamHamsterBank
             }
             else // If credit account
             {
-                string currency = customer._accounts[index].Currency;
                 decimal maxWithdrawal = 10000m;
                 if (currency != "SEK") // Exchange the maximum amount to withdraw if not SEK
                 {
@@ -326,7 +327,6 @@ namespace TeamHamsterBank
                 return;
             }
             customer._accounts[index].Balance -= withdrawal;
-            string currency = customer._accounts[index].Currency;
             Console.Clear();
             Console.Write("\n\n   '{0}'  har tagits bort från [{1}]", withdrawal,
                 customer._accounts[index].AccountNumber);
