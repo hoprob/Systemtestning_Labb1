@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace TeamHamsterBank
 {
@@ -65,6 +66,23 @@ namespace TeamHamsterBank
                         break;
                     case 5:
                         accountType = "Kreditkonto";
+
+                        Console.Clear();
+                        Console.CursorVisible = false;
+                        Console.WriteLine("\n  Vänligen vänta medan vi genomför vår kreditupplysning.");
+                        for (int i = 0; i < 35; i++)
+                        {
+                            Console.SetCursorPosition(i + 10, 2);
+                            Console.Write(".");
+                            Thread.Sleep(200);
+                        }
+                        Console.CursorVisible = true;
+                        Console.CursorVisible = false;
+
+                        Console.Clear();
+                        Console.WriteLine("\n  Du är beviljad ett kreditkonto.\n\n" +
+                            "  Vänligen klicka Enter för att fortsätta.");
+                        Console.ReadKey();
                         rerunSelection = false;
                         break;
                     default:

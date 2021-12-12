@@ -281,19 +281,35 @@ namespace TeamHamsterBank
             index += -1;
             decimal withdrawal = 0;
             decimal balance = customer._accounts[index].Balance;
-            if (balance < 1)
+            if (customer._accounts[index].AccountType != "Kreditkonto") // if not a credit account
             {
-                Console.Write("\n\n   Det går inte att ta ut pengar.\t Kontot är tomt !");
-                Console.ReadKey();
-                return;
+                if (balance < 1)
+                {
+                    Console.Write("\n\n   Det går inte att ta ut pengar.\t Kontot är tomt !");
+                    Console.ReadKey();
+                    return;
+                }
+                while (!customer._accounts[index].EnoughBalance(withdrawal) || withdrawal < 1)
+                {
+                    Console.Write("\n\n   Maxvärdet du kan ta ut är [{0}]\n  " +
+                        "\n   Var vänlig och bekräfta hur mycket du vill" +
+                        " ta ut:   ", balance);
+                    Decimal.TryParse(Console.ReadLine(), out withdrawal);
+                }
             }
-            while (!customer._accounts[index].EnoughBalance(withdrawal) || withdrawal < 1)
+            else // If credit account
             {
-                Console.Write("\n\n   Maxvärdet du kan ta ut är [{0}]\n  " +
-                    "\n   Var vänlig och bekräfta hur mycket du vill" +
-                    " ta ut:   ", balance);
+                Console.Write("\n   Var vänlig och bekräfta hur mycket du vill ta ut:   ");
                 Decimal.TryParse(Console.ReadLine(), out withdrawal);
+
+                while (withdrawal < 1)
+                {
+                    Console.Write("\n\n   Ogiltlig summa. Var vänlig och bekräfta hur mycket du vill ta ut:   ");
+                }
+
+                CreditAccount.CalculateCreditInterest(withdrawal, customer._accounts[index].Currency);
             }
+                
             if (!VerifyCustomer(customer))
             {
                 return;
