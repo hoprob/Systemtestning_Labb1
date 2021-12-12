@@ -18,18 +18,18 @@ namespace TeamHamsterBank
         public static void Login()
         {           
             Console.Clear();
-            Console.Write("\n\n\t\tVälkommen till HamsterBanken\n\n\n" +
+            Console.Write("\n\n\t\t\tVälkommen till HamsterBanken\n\n\n" +
                     "\tVar god och skriv in ditt Användar-ID:  ");
             int attempts = 3;
             string inputUser_ID = String.Empty;
             bool found = false;
-            User user = null;
+            User user;
             while (attempts > 0)
             {
                 if (!found)
                 {
                     inputUser_ID = Console.ReadLine().ToUpper();
-                    if (User.CheckUserName(UsersList, inputUser_ID.ToUpper()))
+                    if (User.CheckUserName(UsersList, inputUser_ID))
                     {
                         found = true;
                     }
@@ -43,7 +43,7 @@ namespace TeamHamsterBank
                 Console.Write("\n\n   Skriv in ditt lösenord:  ");
                 string inputPassword = GetPassword();
 
-                if ((user = User.CheckPassword(UsersList, inputUser_ID.ToUpper(), inputPassword)) != null )
+                if ((user = User.CheckPassword(UsersList, inputUser_ID, inputPassword)) != null )
                 {
                     CheckUserType(user);
                     Login();
@@ -104,8 +104,8 @@ namespace TeamHamsterBank
             while (run)
             {
                 Console.Clear();
-                Console.Write("\n\t\t* (( Välkommen {0}" +
-                                                                  " )) * \n\n" +
+                Console.Write("\n\t\t\t* (( Välkommen {0}" +
+                                                                  " )) * \n\n\n" +
                     "  [1] Konton och saldo \n\n" +
                     "  [2] Överföring\n\n" +
                     "  [3] Sätt in pengar \n\n" +
@@ -195,6 +195,7 @@ namespace TeamHamsterBank
                         break;
                 }
                 StoreAndLoad.SaveAccounts();
+                StoreAndLoad.SaveTransactions();
             }
         }
 
@@ -223,10 +224,11 @@ namespace TeamHamsterBank
             }
 
             customer._accounts[index].Balance += deposit;
+            string currency = customer._accounts[index].Currency;
             Console.Clear();
             Console.Write("\n\n   '{0}' har lagts till [{1}]", deposit,
                 customer._accounts[index].AccountNumber);
-            Account.SubmitTransaction(customer, index, deposit);
+            Account.SubmitTransaction(customer, index, deposit, currency);
             Console.WriteLine(Account.PrintAccounts(customer));
 
             // Print amount after interest per year
@@ -324,10 +326,11 @@ namespace TeamHamsterBank
                 return;
             }
             customer._accounts[index].Balance -= withdrawal;
+            string currency = customer._accounts[index].Currency;
             Console.Clear();
             Console.Write("\n\n   '{0}'  har tagits bort från [{1}]", withdrawal,
                 customer._accounts[index].AccountNumber);
-            Account.SubmitTransaction(customer, index, - withdrawal);
+            Account.SubmitTransaction(customer, index, - withdrawal, currency);
             Console.WriteLine(Account.PrintAccounts(customer));
         }
 
@@ -396,6 +399,7 @@ namespace TeamHamsterBank
                         {
                             transferTo--;
                             Console.Clear();
+                            string currency = customer._accounts[transferFrom].Currency;
                             ReturnInstruction(0);
                             do
                             {
@@ -418,9 +422,9 @@ namespace TeamHamsterBank
                                         Console.WriteLine(customer.
                                             _accounts[transferTo]);
                                         Account.SubmitTransaction(customer,
-                                            transferFrom, transferSum);
+                                            transferFrom, -transferSum, currency);
                                         Account.SubmitTransaction(customer,
-                                            transferTo, transferSum);
+                                            transferTo, transferSum, currency);
                                         transferBool = false;
                                     }
                                     else
@@ -472,14 +476,15 @@ namespace TeamHamsterBank
             while (run)
             {
                 Console.Clear();
-                Console.Write("\n * Admin * \t\t*  (( Välkommen {0} " +
-                                                                  " )) * \n\n" +
+                Console.Write("\n  * Admin * \t\t\t*  (( Välkommen {0} " +
+                                                                  " )) * \n\n\n" +
                     "  [1] Registrera en ny kund  \n\n" +
                     "  [2] Uppdatera växelkurser för alla valutor  (API-samtal)\n\n" +
                     "  [3] Sätt in växelkurser för en valuta \n\n" +
                     "  [4] Ändra en annan användares lösenord \n\n" +
                     "  [5] Ändra eget lösenord \n\n" +
-                    "  [6] Logga ut \n\n" +
+                    "  [6] Ta bort en användare från systemet \n\n" +
+                    "  [7] Logga ut \n\n" +
                     "   \tVälj:  ", admin.FullName);
                 Int32.TryParse(Console.ReadLine(), out int option);
                 switch (option)
@@ -515,6 +520,9 @@ namespace TeamHamsterBank
                         }
                         break;
                     case 6:
+                        Admin.DeleteUser();
+                        break;
+                    case 7:
                         Console.Clear();
                         Console.WriteLine("\n\n\n\n\t\tVälkommen åter :-)");
                         Thread.Sleep(1800);
@@ -528,10 +536,11 @@ namespace TeamHamsterBank
                 }
                 StoreAndLoad.SaveUsers();
                 StoreAndLoad.SaveAccounts();
+                StoreAndLoad.SaveTransactions();
             }
         }
         
-        static void Redirecting()
+        public static void Redirecting()
         {
             Console.Write("\n\n\n\t\tKlicka 'Enter' för att komma till huvudmenyn");
             Console.ReadLine();
@@ -593,6 +602,7 @@ namespace TeamHamsterBank
                             {
                                 fromAccount--;
                                 Console.Clear();
+                                string currency = customer._accounts[fromAccount].Currency;
                                 ReturnInstruction(0);
                                 //Gets transferSum
                                 do
@@ -624,10 +634,10 @@ namespace TeamHamsterBank
                                                 {
                                                     Account.SubmitTransaction(toCustomer,
                                                     toCustomer._accounts.FindIndex
-                                                    (a => a.Equals(toAccount)), transferSum);
+                                                    (a => a.Equals(toAccount)), transferSum, currency);
                                                 }));
                                                 Account.SubmitTransaction(customer,
-                                                    fromAccount, transferSum);
+                                                    fromAccount, -transferSum, currency);
                                                 transferBool = false;
                                             } 
                                             else { transferBool = false; }
@@ -824,6 +834,7 @@ namespace TeamHamsterBank
             }
             UpcomingTransactions.Clear();
             StoreAndLoad.SaveAccounts();
+            StoreAndLoad.SaveTransactions();
         }
     }
 }

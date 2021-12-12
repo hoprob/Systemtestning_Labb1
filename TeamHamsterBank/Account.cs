@@ -7,6 +7,8 @@ namespace TeamHamsterBank
 {
     class Account
     {
+        private List<string[]> _transaction = new List<string[]>();
+
         private string _accountType = "New Account";
         private string _accountName = "Konto";
         private decimal _balance;
@@ -27,31 +29,9 @@ namespace TeamHamsterBank
         private string _customerID;
         internal string CustomerID { get => _customerID; }
 
-        internal static List<string[]> CurrencyList = new List<string[]>
-        {
-            new string[] { "SEK", "1.0" },
-            new string[] { "EUR", "10.23" },
-            new string[] { "USD", "9.03" },
-            new string[] { "GBP", "12.03" },
-            new string[] { "CAD", "7.08" },
-            new string[] { "JPY", "0.080" },
-            new string[] { "CHF", "9.82" },
-            new string[] { "AUD", "6.46" },
-        }; // List of available currencies in the bank
 
-        private List<string[]> _transaction = new List<string[]>();
-        //This Constructor will only be called when the app starts to
-        // declare the accounts that already exist.
-        public Account(string accountName, string accountType, decimal balance, string currency, string customerID)
-        {
-            _staticAccountNum++;
-            _accountName = accountName;
-            _accountType = accountType;
-            _accountNum = _staticAccountNum;
-            _balance = balance;
-            _currency = currency;
-            _customerID = customerID;
-        }
+        /*This constructor will only be called to declare the accounts that already
+         registered when the app starts runs */
         public Account(string accountName, string accountType, string accountNum,
                         decimal balance, string currency, string customerID)
         {
@@ -62,8 +42,9 @@ namespace TeamHamsterBank
             _balance = balance;
             _currency = currency;
             _customerID = customerID;
+            SortOutDetails(StoreAndLoad.TransactionsFile);
         }
-        // This constructer will be called by the customer-object to open a new accounnt
+        // This constructer will be called when opening a new accounnt
         public Account(string accountName, string accountType, string currency, string customerID)
         {
             _staticAccountNum++;
@@ -74,11 +55,35 @@ namespace TeamHamsterBank
             _currency=currency;
             _customerID = customerID;
         }
+        public void SortOutDetails(List<string[]> transactionsFile)
+        {
+            foreach (string[] transaction in transactionsFile)
+            {
+                if (_accountNum.ToString() == transaction[3])
+                {
+                    _transaction.Add(new string[] {transaction[0], transaction[1],
+                                                   transaction[2], transaction[3] });
+                }
+            }
+        }
+        // List of available currencies in the bank
+        internal static List<string[]> CurrencyList = new List<string[]>
+        {
+            new string[] { "SEK", "1.0" },
+            new string[] { "EUR", "10.23" },
+            new string[] { "USD", "9.03" },
+            new string[] { "GBP", "12.03" },
+            new string[] { "CAD", "7.08" },
+            new string[] { "JPY", "0.080" },
+            new string[] { "CHF", "9.82" },
+            new string[] { "AUD", "6.46" },
+        };
+
         public string ToSave()
         {
 
-            return $"{_accountName}________{_accountType.Trim()}________{_accountNum}________{_balance}" +
-                   $"________{_currency}________{_customerID}\n";
+            return $"{_accountName}________{_accountType.Trim()}________{_accountNum}" +
+                $"________{_balance}________{_currency}________{_customerID}\n";
         }
         public override string ToString()
         {
@@ -133,17 +138,18 @@ namespace TeamHamsterBank
             foreach (string[] transaction in _transaction)
             {
                                     //  Value     ,      Date       
-                output += $"\n\n\t\t{transaction[0]}\t\t{transaction[1]}\n\n";
+                output += $"\n\n\t\t{transaction[0]}\t\t{transaction[1]} {transaction[2]}\n\n";
             }
             return output;
         }
-        public static void SubmitTransaction(Customer customer, int accountIndex, decimal value)
+        public static void SubmitTransaction(Customer customer, int accountIndex, decimal value, string currency)
         {
-            DateTime date = DateTime.Now;
             customer._accounts[accountIndex]._transaction.Add(
-                new string[] { value.ToString(), date.ToString() }); 
+                new string[] { DateTime.Now.ToString(), value.ToString(), currency});
+            StoreAndLoad.TransactionsFile.Add(
+                new string[] { DateTime.Now.ToString(), value.ToString(),
+                    currency, customer._accounts[accountIndex]._accountNum.ToString() });
         }
-
         public bool EnoughBalance(decimal checkSum)
         {
             return checkSum <= _balance;
@@ -244,13 +250,11 @@ namespace TeamHamsterBank
                 // Print summary
                 Console.Clear();
                 Console.Write($"\n\n   '{loanAmount.ToString("F")}' har lagts till [{customer._accounts[index].AccountNumber}]");
-                Account.SubmitTransaction(customer, index, loanAmountLeft);
+                Account.SubmitTransaction(customer, index, loanAmount, "SEK");
                 Console.WriteLine(Account.PrintAccounts(customer));
-                Console.ReadKey();
             }
             // If the customer doesn't have enough money for a loan
             else { Console.WriteLine("  Du har inte tillräckligt med pengar för att låna från vår bank.\n\n  Vänligen tryck 'Enter' för att fortsätta"); }
-            Console.ReadKey();
         }
     }
 }
