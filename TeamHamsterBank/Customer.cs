@@ -40,6 +40,7 @@ namespace TeamHamsterBank
 
             string accountType = String.Empty;
             bool rerunSelection;
+            bool accepted = false; // Accept for credit account
 
             // Select account type
             do
@@ -80,10 +81,21 @@ namespace TeamHamsterBank
                         Console.CursorVisible = true;
                         Console.CursorVisible = false;
 
+                        Random rnd = new Random();
+                        int num = rnd.Next(1, 3);
                         Console.Clear();
-                        Console.WriteLine("\n  Du är beviljad ett kreditkonto.\n\n" +
+                        if (num == 1)
+                        {
+                            Console.WriteLine("\n  Du är inte beviljad ett kreditkonto hos vår bank.\n\n");
+                            accepted = false;
+                        }
+                        else
+                        {
+                            Console.WriteLine("\n  Du är beviljad ett kreditkonto.\n\n" +
                             "  Vänligen klicka Enter för att fortsätta.");
-                        Console.ReadKey();
+                            Console.ReadKey();
+                            accepted = true;
+                        }
                         rerunSelection = false;
                         break;
                     default:
@@ -93,81 +105,83 @@ namespace TeamHamsterBank
                 }
             } while (rerunSelection);
 
-            Console.Clear();
-            Console.WriteLine($"\n  {accountType.Trim()} har valts.");
-            // Get name for new account
-            string accountName = String.Empty;
-            do
+            if (accepted)
             {
-                Console.Write("\n  Vänligen ange kontonamn: ");
-                accountName = Console.ReadLine().Trim();
-
-                if (accountName.Length > 20)
+                Console.Clear();
+                Console.WriteLine($"\n  {accountType.Trim()} har valts.");
+                // Get name for new account
+                string accountName = String.Empty;
+                do
                 {
-                    Console.WriteLine("  Kontonamnet är för långt.");
-                }
-            } while (accountName.Length > 15);
+                    Console.Write("\n  Vänligen ange kontonamn: ");
+                    accountName = Console.ReadLine().Trim();
 
-            // Get currency for new account
-            Console.Write("\n  Vänligen ange valuta för kontot: ");
-            string inputCurrency = string.Empty;
-            string currency = String.Empty;
-            do
-            {
-                inputCurrency = Console.ReadLine().Trim().ToUpper(); // Input currency
+                    if (accountName.Length > 20)
+                    {
+                        Console.WriteLine("  Kontonamnet är för långt.");
+                    }
+                } while (accountName.Length > 15);
 
-                if (inputCurrency.Length != 3 || !( Account.CurrencyList.Exists( e => e[0].Contains(inputCurrency)) ))
+                // Get currency for new account
+                Console.Write("\n  Vänligen ange valuta för kontot: ");
+                string inputCurrency = string.Empty;
+                string currency = String.Empty;
+                do
                 {
-                    Console.Clear();
-                    Console.WriteLine("\n  Oglitligt val. Vänligen ange valuta med tre bokstäver.\n");
-                    Account.PrintCurrencies();
-                    Console.Write("\n  Välj: ");
-                }
-                else
+                    inputCurrency = Console.ReadLine().Trim().ToUpper(); // Input currency
+
+                    if (inputCurrency.Length != 3 || !( Account.CurrencyList.Exists( e => e[0].Contains(inputCurrency)) ))
+                    {
+                        Console.Clear();
+                        Console.WriteLine("\n  Oglitligt val. Vänligen ange valuta med tre bokstäver.\n");
+                        Account.PrintCurrencies();
+                        Console.Write("\n  Välj: ");
+                    }
+                    else
+                    {
+                        currency = inputCurrency; // Set currency
+                    }
+                } while (inputCurrency.Length != 3 || !(Account.CurrencyList.Exists(e => e[0].Contains(inputCurrency))));
+
+                // Create a new account object and add to _accounts list
+                switch (accountType)
                 {
-                    currency = inputCurrency; // Set currency
+                    case "Allkonto":
+                        MainAccount newMAccount = new MainAccount(accountName, accountType, currency, _userId);
+                        _accounts.Add(newMAccount);
+                        break;
+                    case "Sparkonto":
+                        SavingsAccount newSAccount = new SavingsAccount(accountName, accountType, currency, _userId);
+                        _accounts.Add(newSAccount);
+
+                        Console.Clear(); // Prints an example of how much the money will be worth with interest
+                        SavingsAccount.CalculateSavingsInterest(1000, 0.5, true, currency); // 6 months
+                        SavingsAccount.CalculateSavingsInterest(1000, 1, false, currency); // 1 year
+                        SavingsAccount.CalculateSavingsInterest(1000, 5, false, currency); // 5 years
+                        SavingsAccount.CalculateSavingsInterest(1000, 10, false, currency); // 10 years
+                        Console.WriteLine("\n  Tryck Enter för att fortsätta");
+                        Console.ReadKey();
+                        break;
+                    case "Framtidskonto":
+                        FutureAccount newFAccount = new FutureAccount(accountName, accountType, currency, _userId);
+                        _accounts.Add(newFAccount);
+                        break;
+                    case "Investeringskonto":
+                        InvestmentAccount newIAccount = new InvestmentAccount(accountName, accountType, currency, _userId);
+                        _accounts.Add(newIAccount);
+                        break;
+                    case "Kreditkonto":
+                        CreditAccount newCAccount = new CreditAccount(accountName, accountType, currency, _userId);
+                        _accounts.Add(newCAccount);
+                        break;
+                    default:
+                        break;
                 }
-            } while (inputCurrency.Length != 3 || !(Account.CurrencyList.Exists(e => e[0].Contains(inputCurrency))));
 
-            // Create a new account object and add to _accounts list
-            switch (accountType)
-            {
-                case "Allkonto":
-                    MainAccount newMAccount = new MainAccount(accountName, accountType, currency, _userId);
-                    _accounts.Add(newMAccount);
-                    break;
-                case "Sparkonto":
-                    SavingsAccount newSAccount = new SavingsAccount(accountName, accountType, currency, _userId);
-                    _accounts.Add(newSAccount);
-
-                    Console.Clear(); // Prints an example of how much the money will be worth with interest
-                    SavingsAccount.CalculateSavingsInterest(1000, 0.5, true, currency); // 6 months
-                    SavingsAccount.CalculateSavingsInterest(1000, 1, false, currency); // 1 year
-                    SavingsAccount.CalculateSavingsInterest(1000, 5, false, currency); // 5 years
-                    SavingsAccount.CalculateSavingsInterest(1000, 10, false, currency); // 10 years
-                    Console.WriteLine("\n  Tryck Enter för att fortsätta");
-                    Console.ReadKey();
-                    break;
-                case "Framtidskonto":
-                    FutureAccount newFAccount = new FutureAccount(accountName, accountType, currency, _userId);
-                    _accounts.Add(newFAccount);
-                    break;
-                case "Investeringskonto":
-                    InvestmentAccount newIAccount = new InvestmentAccount(accountName, accountType, currency, _userId);
-                    _accounts.Add(newIAccount);
-                    break;
-                case "Kreditkonto":
-                    CreditAccount newCAccount = new CreditAccount(accountName, accountType, currency, _userId);
-                    _accounts.Add(newCAccount);
-                    break;
-                default:
-                    break;
+                // Print details of new account
+                Console.Clear();
+                Console.WriteLine($"\n  Nytt {accountType.Trim()}, {accountName}, har skapats med valuta [{currency}].");
             }
-
-            // Print details of new account
-            Console.Clear();
-            Console.WriteLine($"\n  Nytt {accountType.Trim()}, {accountName}, har skapats med valuta [{currency}].");
         }
-
     }
 }
