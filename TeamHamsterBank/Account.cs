@@ -217,15 +217,23 @@ namespace TeamHamsterBank
             decimal totalBalance = 0;
             for (int i = 0; i < customer._accounts.Count; i++)
             {
+                if (customer._accounts[i].Currency != "SEK")
+                {
+                    string currency = customer._accounts[i].Currency;
+                    decimal balance = customer._accounts[i].Balance;
+                    Bank.ExchangeCurrency(ref balance, ref currency);
+                }
                 totalBalance = totalBalance + customer._accounts[i].Balance;
             }
 
             if (totalBalance >= 1000m)
             {
                 decimal maxLoanAmount = totalBalance * 2;
+                decimal maxLoanAmountEven = maxLoanAmount - maxLoanAmount % 1000; // Rounds to the nearest and lowest thousands
+
                 // Customer can borrow double the current total balance
                 Console.WriteLine($"  Minimumsumman för lån är 1000,00 [SEK]. " +
-                    $"Du kan låna mellan 1000,00 - {maxLoanAmount.ToString("F")} [SEK] baserat på ditt nuvarande kapital.\n");
+                    $"Du kan låna mellan 1000,00 - {maxLoanAmountEven.ToString("F")} [SEK] baserat på ditt nuvarande kapital.\n");
                 Console.WriteLine($"  Vi har en engångsavgift på 10% som dras direkt från lånet och månadsräntan är 5% av lånsumman\n");
 
                 // Input loan amount
@@ -235,11 +243,11 @@ namespace TeamHamsterBank
                 {
                     Decimal.TryParse(Console.ReadLine(), out loanAmount);
 
-                    if (loanAmount > totalBalance * 2 || loanAmount < 1000m)
+                    if (loanAmount > maxLoanAmountEven || loanAmount < 1000m)
                     {
-                        Console.WriteLine($"  Ogiltligt val. Vänligen ange en summa mellan 1000 - {maxLoanAmount.ToString("F")} [SEK]");
+                        Console.WriteLine($"  Ogiltligt val. Vänligen ange en summa mellan 1000 - {maxLoanAmountEven.ToString("F")} [SEK]");
                     }
-                } while (loanAmount > totalBalance * 2 || loanAmount < 1000m);
+                } while (loanAmount > maxLoanAmountEven || loanAmount < 1000m);
 
                 decimal fee = loanAmount * 0.1m;
 
