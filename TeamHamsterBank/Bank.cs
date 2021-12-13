@@ -308,7 +308,7 @@ namespace TeamHamsterBank
                 decimal maxWithdrawal = 10000m;
                 if (currency != "SEK") // Exchange the maximum amount to withdraw if not SEK
                 {
-                    Bank.ExchangeBack(ref maxWithdrawal, ref currency);
+                    ExchangeBack(ref maxWithdrawal, ref currency);
                 }
 
                 Console.Write($"\n   Maxsumman du kan ta ut är {maxWithdrawal.ToString("F")} {customer._accounts[index].Currency}\n" +
@@ -321,7 +321,7 @@ namespace TeamHamsterBank
                     Decimal.TryParse(Console.ReadLine(), out withdrawal);
                 }
                 // Calculate and print out the debt for the withdrawal
-                CreditAccount.CalculateCreditInterest(withdrawal, customer._accounts[index].Currency);
+                CreditAccount.CalculateCreditInterest(withdrawal, customer._accounts[index].Currency, customer._accounts[index].Balance);
             }
                 
             if (!VerifyCustomer(customer))
