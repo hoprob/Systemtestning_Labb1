@@ -226,7 +226,7 @@ namespace TeamHamsterBank
                 // Customer can borrow double the current total balance
                 Console.WriteLine($"  Minimumsumman för lån är 1000,00 [SEK]. " +
                     $"Du kan låna mellan 1000,00 - {maxLoanAmount.ToString("F")} [SEK] baserat på ditt nuvarande kapital.\n");
-                Console.WriteLine($"  Vi har en engångsavgift på 10% och månadsräntan är 5% av lånsumman\n");
+                Console.WriteLine($"  Vi har en engångsavgift på 10% som dras direkt från lånet och månadsräntan är 5% av lånsumman\n");
 
                 // Input loan amount
                 Console.Write("  Vänligen ange hur mycket du vill låna: ");
@@ -241,13 +241,14 @@ namespace TeamHamsterBank
                     }
                 } while (loanAmount > totalBalance * 2 || loanAmount < 1000m);
 
+                decimal fee = loanAmount * 0.1m;
+
                 Console.Clear();
                 Console.WriteLine($"  Du har valt att låna {loanAmount.ToString("F")} [SEK]\n");
-                Console.WriteLine($"  Engångsavgift\t {(loanAmount * 0.1m).ToString("F")} [SEK]\n");
-
+                decimal loanAmountLeft = loanAmount - fee;
+                Console.WriteLine($"  Engångsavgift {fee.ToString("F")} [SEK] har dragits av från ditt lån och kvarvarande summa av lånet är {loanAmountLeft.ToString("F")} [SEK]\n");
                 decimal interestCost = 0;
                 int months = 0;
-                decimal loanAmountLeft = loanAmount;
                 while (loanAmountLeft > 0m)
                 {
                     interestCost = interestCost + (loanAmountLeft * 0.05m);
@@ -256,8 +257,8 @@ namespace TeamHamsterBank
                 }
 
                 Console.WriteLine($"  Du måste minst betala av 100 [SEK] per månad och om du betalar av minimumsumman: \n" +
-                    $"  Har du betalat av lånet efter {months} månader \n" +
-                    $"  Kostnaden för räntan blir {interestCost.ToString("F")} [SEK]");
+                    $"  - Har du betalat av lånet efter {months} månader \n" +
+                    $"  - Kostnaden för räntan blir {interestCost.ToString("F")} [SEK]");
 
                 // Account selection and transfer
                 Console.WriteLine(PrintAccounts(customer));
