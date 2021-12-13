@@ -7,6 +7,7 @@ using System.Text;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Timers;
+using Art = TeamHamsterBank.HamsterArt;
 
 namespace TeamHamsterBank
 {
@@ -18,8 +19,10 @@ namespace TeamHamsterBank
         public static void Login()
         {           
             Console.Clear();
-            Console.Write("\n\n\t\t\tVälkommen till HamsterBanken\n\n\n" +
-                    "\tVar god och skriv in ditt Användar-ID:  ");
+            //Console.Write("\n\n\t\t\tVälkommen till HamsterBanken\n\n\n" +
+            //        "\tVar god och skriv in ditt Användar-ID:  ");
+            Art.HeadLine("\n\n\t\t\tVälkommen till HamsterBanken\n\n\n");
+            Console.Write("\tVar god och skriv in ditt Användar-ID:  ");
             int attempts = 3;
             string inputUser_ID = String.Empty;
             bool found = false;
@@ -104,9 +107,8 @@ namespace TeamHamsterBank
             while (run)
             {
                 Console.Clear();
-                Console.Write("\n\t\t\t* (( Välkommen {0}" +
-                                                                  " )) * \n\n\n" +
-                    "  [1] Konton och saldo \n\n" +
+                Art.HeadLine($"\n\t\t\t* (( Välkommen {user.FullName} )) * \n\n\n");
+                Console.Write("  [1] Konton och saldo \n\n" +
                     "  [2] Överföring\n\n" +
                     "  [3] Sätt in pengar \n\n" +
                     "  [4] Ta ut pengar \n\n" +
@@ -114,7 +116,7 @@ namespace TeamHamsterBank
                     "  [6] Byta lösenord \n\n" +
                     "  [7] Banklån \n\n" +
                     "  [8] Logga ut \n\n" +
-                    "   \tVälj:  ", user.FullName);
+                    "   \tVälj:  ");
                 Int32.TryParse(Console.ReadLine(), out int option);
                 switch (option)
                 {
@@ -168,7 +170,7 @@ namespace TeamHamsterBank
                         if(VerifyCustomer(customer))
                         {
                             Console.Clear();
-                            Console.WriteLine("\n\t**Ändra Lösenord**");
+                            Art.HeadLine("\n\t**Ändra Lösenord**");
                             if(customer.ChangePassword())
                             {
                                 Console.Clear();
@@ -190,7 +192,7 @@ namespace TeamHamsterBank
                         break;
                     default:
                         Console.WriteLine("\t\tOgiltig inmatning!   " +
-                        "Var god och välj från 1 - 7\n");
+                        "Var god och välj från 1 - 8\n");
                         Console.ReadKey();
                         break;
                 }
@@ -372,7 +374,7 @@ namespace TeamHamsterBank
             bool transferBool = true;
             string input;
             Console.Clear();
-            ReturnInstruction(customer._accounts.Count);
+            ReturnInstruction(customer._accounts.Count+2);
             do
             {
                 Console.WriteLine("Vilket konto vill du föra över FRÅN?");
@@ -385,7 +387,7 @@ namespace TeamHamsterBank
                 {
                     transferFrom--;
                     Console.Clear();
-                    ReturnInstruction(customer._accounts.Count);
+                    ReturnInstruction(customer._accounts.Count +2);
                     do
                     {
                         Console.WriteLine("Vilket konto vill du överföra TILL?");
@@ -417,10 +419,9 @@ namespace TeamHamsterBank
                                         Console.Clear();
                                         Console.WriteLine("\nÖverföring genomförd!" +
                                             "\n\nNya saldon är: \n");
-                                        Console.WriteLine(customer.
-                                            _accounts[transferFrom]);
-                                        Console.WriteLine(customer.
-                                            _accounts[transferTo]);
+                                        Console.WriteLine(Account.PrintAccounts(
+                                            new Account[]{ customer._accounts[transferFrom],
+                                                customer._accounts[transferTo]}));
                                         Account.SubmitTransaction(customer,
                                             transferFrom, -transferSum, currency);
                                         Account.SubmitTransaction(customer,
@@ -476,16 +477,15 @@ namespace TeamHamsterBank
             while (run)
             {
                 Console.Clear();
-                Console.Write("\n  * Admin * \t\t\t*  (( Välkommen {0} " +
-                                                                  " )) * \n\n\n" +
-                    "  [1] Registrera en ny kund  \n\n" +
+                Art.HeadLine($"\n  * Admin * \t\t\t*  (( Välkommen {admin.FullName} )) * \n\n\n");
+                Console.Write("  [1] Registrera en ny kund  \n\n" +
                     "  [2] Uppdatera växelkurser för alla valutor  (API-samtal)\n\n" +
                     "  [3] Sätt in växelkurser för en valuta \n\n" +
                     "  [4] Ändra en annan användares lösenord \n\n" +
                     "  [5] Ändra eget lösenord \n\n" +
                     "  [6] Ta bort en användare från systemet \n\n" +
                     "  [7] Logga ut \n\n" +
-                    "   \tVälj:  ", admin.FullName);
+                    "   \tVälj:  ");
                 Int32.TryParse(Console.ReadLine(), out int option);
                 switch (option)
                 {
@@ -511,7 +511,7 @@ namespace TeamHamsterBank
                         break;
                     case 5://Change admin password
                         Console.Clear();
-                        Console.WriteLine("\n\t**Ändra Lösenord**");
+                        Art.HeadLine("\n\t**Ändra Lösenord**");
                         if (admin.ChangePassword())
                         {
                             Console.Clear();
@@ -530,7 +530,7 @@ namespace TeamHamsterBank
                         break;
                     default:
                         Console.WriteLine("\t\tOgiltig inmatning!   " +
-                        "Var god och välj från 1 - 6\n");
+                        "Var god och välj från 1 - 7\n");
                         Console.ReadKey();
                         break;
                 }
@@ -628,8 +628,7 @@ namespace TeamHamsterBank
                                                 Console.Clear();
                                                 Console.WriteLine("\nÖverföring " +
                                                     "genomförd!\n\nNytt saldo är:\n");
-                                                Console.WriteLine(customer.
-                                                    _accounts[fromAccount]);
+                                                Console.WriteLine(Account.PrintAccounts(customer._accounts[fromAccount]));
                                                 UpcomingTransactions.Add(new Task(() =>
                                                 {
                                                     Account.SubmitTransaction(toCustomer,

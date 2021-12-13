@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using Art = TeamHamsterBank.HamsterArt;
 
 namespace TeamHamsterBank
 {
@@ -11,7 +12,7 @@ namespace TeamHamsterBank
         public Admin(string UserId, string FullName,  string Password) : base(UserId, FullName,  Password) { }
         public static void CreateNewCustomer(List<User> UsersList)
         {
-            Console.WriteLine("\t*** Skapa en ny användare ***\n");
+            Art.HeadLine("\t*** Skapa en ny användare ***\n");
 
             // Generate new user id
             Random rnd = new Random();
@@ -98,7 +99,7 @@ namespace TeamHamsterBank
                         User temp = users.Find(u => u.UserID == id.ToString());
                         Console.Clear();
                         Bank.ReturnInstruction(0);
-                        Console.WriteLine($"\n\n\t**Ändra lösenord för användare" +
+                        Art.HeadLine($"\n\n\t**Ändra lösenord för användare" +
                             $" [{temp.UserID}] [{temp.FullName}]**");
                         if (temp.ChangePassword())
                         {

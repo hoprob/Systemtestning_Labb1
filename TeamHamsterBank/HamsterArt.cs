@@ -6,6 +6,11 @@ namespace TeamHamsterBank
 {
     public class HamsterArt
     {
+        public static void HeadLine(string str)
+        {
+            Console.Write(str, Console.ForegroundColor = ConsoleColor.Yellow);
+            Console.ResetColor();
+        }
         public static void HamsterWelcome()
         {
             Console.OutputEncoding = Encoding.UTF8;

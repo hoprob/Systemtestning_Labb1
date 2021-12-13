@@ -116,6 +116,32 @@ namespace TeamHamsterBank
             output.Append("\t╚═══╧═══════════╧══════════════╧════════════╧════════════════════╧══════╝");
             return $"\n\n{output.ToString()}";
         }
+        public static string PrintAccounts(params Account[] accounts)
+        {
+            StringBuilder output = new StringBuilder();
+            string accountName = string.Empty;
+            string accountType = string.Empty;
+
+            output.Append("\t╔═══════════╤══════════════╤════════════╤════════════════════╤══════╗\n" +
+                          "\t║Kontonummer│    Namn      │  Kontotyp  │        Saldo       │Valuta║\n" +
+                          "\t╠═══════════╪══════════════╪════════════╪════════════════════╪══════╣\n");
+            for (int i = 0; i < accounts.Length; i++)
+            {
+                accountName = accounts[i]._accountName;
+                accountType = accounts[i]._accountType;
+                string balanceOutput = $"{accounts[i]._balance:0.00}";
+                if ((accountName = accounts[i]._accountName).Length > 14)
+                    accountName = accountName.Remove(14);
+                if ((accountType = accounts[i]._accountType).Length > 12)
+                    accountType = accountType.Remove(12);
+                output.Append(String.Format("\t║{0,-11}│{1,-14}│{2,-12}│{3,20}│{4,-6}║\n",
+                     accounts[i]._accountNum, accountName, accountType,
+                    balanceOutput, accounts[i]._currency));
+                output.Append("\t╟───────────┼──────────────┼────────────┼────────────────────┼──────╢\n");
+            }
+            output.Append("\t╚═══════════╧══════════════╧════════════╧════════════════════╧══════╝");
+            return $"\n\n{output.ToString()}";
+        }
         public static void SelectAccount(Customer customer, int numberOfAccounts)
         {
             if (customer._accounts.Count == 0)

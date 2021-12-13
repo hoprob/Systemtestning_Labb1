@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using Art = TeamHamsterBank.HamsterArt;
 
 namespace TeamHamsterBank
 {
@@ -27,7 +28,7 @@ namespace TeamHamsterBank
         }
         public void CreateNewAccount()
         {
-            Console.WriteLine("\t*** Skapa ett nytt konto ***\n");
+            Art.HeadLine("\t*** Skapa ett nytt konto ***\n");
 
             // Options for account type
             Console.WriteLine("  Vänligen ange kontotyp:\n\n" +
