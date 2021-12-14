@@ -150,18 +150,15 @@ namespace TeamHamsterBank
                         Console.Clear();
                         Console.WriteLine(Account.PrintAccounts(customer));
                         Deposit(customer);
-                        Redirecting();
                         break;
                     case 4: // Withdraw
                         Console.Clear();
                         Console.WriteLine(Account.PrintAccounts(customer));
                         Withdraw(customer);
-                        Redirecting();
                         break;
                     case 5: // Create new account as customer
                         Console.Clear();
                         customer.CreateNewAccount();
-                        Redirecting();
                         break;
                     case 6://Change password
                         Console.Clear();
@@ -180,7 +177,6 @@ namespace TeamHamsterBank
                     case 7:
                         Console.Clear();
                         Account.BankLoan(customer);
-                        Redirecting();
                         break;
                     case 8:
                         Console.Clear();
@@ -205,14 +201,21 @@ namespace TeamHamsterBank
             {
                 Console.WriteLine("\n\n\t\tDu har inget registrerat konto." +
                                         "  Var god och öppna ett nytt konto");
+                Redirecting();
                 return;
             }
+            //Console.SetCursorPosition(0, 8);
             int index = 0;
+            string input;
             while (index < 1 || index > customer._accounts.Count)
             {
                 Console.Write("\n\n   Välj vilket konto du vill" +
-                    " sätta in:   ");
-                Int32.TryParse(Console.ReadLine(), out index);
+                    " sätta in eller mata in 'R' för att avbryta!:   ");
+                Int32.TryParse(input = Console.ReadLine(), out index);
+                if (input.Trim().ToUpper() == "R")
+                {
+                    return;
+                }
             }
             index += -1;
             decimal deposit = 0;
@@ -220,7 +223,12 @@ namespace TeamHamsterBank
             {
                 Console.Write("\n\n   Var vänlig och bekräfta hur mycket" +
                     " du kommer sätta in:   ");
-                Decimal.TryParse(Console.ReadLine(), out deposit);
+                Decimal.TryParse(input = Console.ReadLine(), out deposit);
+                if (input.Trim().ToUpper() == "R")
+                {
+                    return;
+                }
+
             }
 
             customer._accounts[index].Balance += deposit;
@@ -228,7 +236,7 @@ namespace TeamHamsterBank
             Console.Clear();
             Console.Write("\n\n   '{0}' har lagts till [{1}]", deposit,
                 customer._accounts[index].AccountNumber);
-            Account.SubmitTransaction(customer, index, deposit, currency);
+            Account.SubmitTransaction("Insättning", customer, index, deposit, currency);
             Console.WriteLine(Account.PrintAccounts(customer));
 
             // Print amount after interest per year
@@ -263,7 +271,7 @@ namespace TeamHamsterBank
                     }
                 } while (runAgain);
             }
-            
+            Redirecting();
         }
         static void Withdraw(Customer customer)
         {
@@ -274,11 +282,16 @@ namespace TeamHamsterBank
                 return;
             }
             int index = 0;
+            string input;
             while (index < 1 || index > customer._accounts.Count)
             {
                 Console.Write("\n\n   Välj vilket konto du vill" +
-                    " ta ut från:   ");
-                Int32.TryParse(Console.ReadLine(), out index);
+                    " ta ut från eller mata in 'R' för att avbryta!:   ");
+                Int32.TryParse(input = Console.ReadLine(), out index);
+                if (input.Trim().ToUpper() == "R")
+                {
+                    return;
+                }
             }
             index += -1;
             decimal withdrawal = 0;
@@ -298,7 +311,11 @@ namespace TeamHamsterBank
                     Console.Write("\n\n   Maxvärdet du kan ta ut är [{0}]\n  " +
                         "\n   Var vänlig och bekräfta hur mycket du vill" +
                         " ta ut:   ", balance);
-                    Decimal.TryParse(Console.ReadLine(), out withdrawal);
+                    Decimal.TryParse(input = Console.ReadLine(), out withdrawal);
+                    if (input.Trim().ToUpper() == "R")
+                    {
+                        return;
+                    }
                 }
             }
             else // If credit account
@@ -306,20 +323,22 @@ namespace TeamHamsterBank
                 decimal maxWithdrawal = 10000m;
                 if (currency != "SEK") // Exchange the maximum amount to withdraw if not SEK
                 {
-                    Bank.ExchangeBack(ref maxWithdrawal, ref currency);
+                    ExchangeBack(ref maxWithdrawal, ref currency);
                 }
 
-                Console.Write($"\n   Maxsumman du kan ta ut är {maxWithdrawal.ToString("F")} {customer._accounts[index].Currency}\n" +
+                decimal maxWithdrawalEven = maxWithdrawal - maxWithdrawal % 1000; // Rounds to the nearest and lowest thousands
+
+                Console.Write($"\n   Maxsumman du kan ta ut är {maxWithdrawalEven.ToString("F")} {customer._accounts[index].Currency}\n" +
                     "   Var vänlig och bekräfta hur mycket du vill ta ut:   ");
                 Decimal.TryParse(Console.ReadLine(), out withdrawal);
 
-                while (withdrawal < 1 || withdrawal > maxWithdrawal)
+                while (withdrawal < 1 || withdrawal > maxWithdrawalEven)
                 {
                     Console.Write("\n\n   Ogiltlig summa. Var vänlig och bekräfta hur mycket du vill ta ut:   ");
                     Decimal.TryParse(Console.ReadLine(), out withdrawal);
                 }
                 // Calculate and print out the debt for the withdrawal
-                CreditAccount.CalculateCreditInterest(withdrawal, customer._accounts[index].Currency);
+                CreditAccount.CalculateCreditInterest(withdrawal, customer._accounts[index].Currency, customer._accounts[index].Balance);
             }
                 
             if (!VerifyCustomer(customer))
@@ -330,8 +349,9 @@ namespace TeamHamsterBank
             Console.Clear();
             Console.Write("\n\n   '{0}'  har tagits bort från [{1}]", withdrawal,
                 customer._accounts[index].AccountNumber);
-            Account.SubmitTransaction(customer, index, - withdrawal, currency);
+            Account.SubmitTransaction("Uttag", customer, index, - withdrawal, currency);
             Console.WriteLine(Account.PrintAccounts(customer));
+            Redirecting();
         }
 
         static bool VerifyCustomer(Customer customer)
@@ -420,9 +440,9 @@ namespace TeamHamsterBank
                                         Console.WriteLine(Account.PrintAccounts(
                                             new Account[]{ customer._accounts[transferFrom],
                                                 customer._accounts[transferTo]}));
-                                        Account.SubmitTransaction(customer,
+                                        Account.SubmitTransaction("Överföring", customer,
                                             transferFrom, -transferSum, currency);
-                                        Account.SubmitTransaction(customer,
+                                        Account.SubmitTransaction("Överföring",customer,
                                             transferTo, transferSum, currency);
                                         transferBool = false;
                                     }
@@ -490,7 +510,6 @@ namespace TeamHamsterBank
                     case 1: // Create a new customer and account as Admin
                         Console.Clear();
                         Admin.CreateNewCustomer(UsersList);
-                        Redirecting();
                         break;
                     case 2:
                         Console.Clear();
@@ -501,7 +520,6 @@ namespace TeamHamsterBank
                     case 3:
                         Console.Clear();
                         Admin.SetCurrencyRate();
-                        Redirecting();
                         break;
                     case 4://Change other users password
                         Console.Clear();
@@ -629,11 +647,11 @@ namespace TeamHamsterBank
                                                 Console.WriteLine(Account.PrintAccounts(customer._accounts[fromAccount]));
                                                 UpcomingTransactions.Add(new Task(() =>
                                                 {
-                                                    Account.SubmitTransaction(toCustomer,
+                                                    Account.SubmitTransaction(customer.FullName, toCustomer,
                                                     toCustomer._accounts.FindIndex
                                                     (a => a.Equals(toAccount)), transferSum, currency);
                                                 }));
-                                                Account.SubmitTransaction(customer,
+                                                Account.SubmitTransaction(toCustomer.FullName, customer,
                                                     fromAccount, -transferSum, currency);
                                                 transferBool = false;
                                             } 
@@ -706,6 +724,7 @@ namespace TeamHamsterBank
 
         static async void UpdateEchangeRates()
         {
+            string updateDate = string.Empty;
             Console.WriteLine("\n\n\t\tHämtar uppgifter.........");
             try
             {
@@ -716,7 +735,8 @@ namespace TeamHamsterBank
                     currency[1] = respons.Substring(11).Replace("}", "");
                 }
                 Console.Clear();
-                Console.WriteLine("\n\t\t\tUppdaterat {0}\n\n", DateTime.Now);
+                updateDate = $"\n\t\t\tUppdaterat {DateTime.Now}\n\n";
+                Art.HeadLine2(updateDate);
                 PrintCurrentExchange();
             }
             catch (Exception)
@@ -736,7 +756,7 @@ namespace TeamHamsterBank
         }
         internal static void PrintCurrentExchange()
         {
-            Console.WriteLine("\tAktuell valutakurs för Svenska kronor (SEK) \n\n");
+            Art.HeadLine("\n\tAktuell valutakurs för Svenska kronor (SEK) \n\n");
             for (int i = 0; i < Account.CurrencyList.Count; i++)
             {
                 if (Account.CurrencyList[i][0] == "SEK")

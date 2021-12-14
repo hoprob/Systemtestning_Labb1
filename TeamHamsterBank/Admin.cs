@@ -12,7 +12,7 @@ namespace TeamHamsterBank
         public Admin(string UserId, string FullName,  string Password) : base(UserId, FullName,  Password) { }
         public static void CreateNewCustomer(List<User> UsersList)
         {
-            Art.HeadLine("\t*** Skapa en ny användare ***\n");
+            Art.HeadLine("\n\t\t\t*** Skapa en ny användare ***\n");
 
             // Generate new user id
             Random rnd = new Random();
@@ -38,12 +38,22 @@ namespace TeamHamsterBank
             } while (isIdUnique == false);
 
             // Get full name
-            Console.Write("  Ange kundens fullständiga namn: ");
+            Console.Write("\n\tAnge kundens fullständiga namn: ");
+            Bank.ReturnInstruction(0);
+            Console.SetCursorPosition(40, 3);
             string inputFullName = Console.ReadLine().Trim();
+            if (inputFullName.ToUpper() == "R")
+            {
+                return;
+            }
             while (inputFullName.Any(char.IsNumber) || inputFullName.Length < 6)
             {
                 Console.Write("\n  Oglitligt namn. Ange ett fullständigt namn: ");
                 inputFullName = Console.ReadLine().Trim();
+                if (inputFullName.ToUpper() == "R")
+                {
+                    return;
+                }
             }
             // Get password
             string inputPassword = NewPassword();
@@ -52,7 +62,8 @@ namespace TeamHamsterBank
             UsersList.Add(newCustomer);
 
             Console.Clear();
-            Console.WriteLine($"\n  Ny användare {newCustomer.FullName} med ID {newCustomer.UserID} har skapats.\n");
+            Console.WriteLine($"\n  Ny användare {newCustomer.FullName}" +
+                $" med ID {newCustomer.UserID} har skapats.\n\n\n");
 
             // Create new account for new user
             newCustomer.CreateNewAccount();
@@ -61,10 +72,17 @@ namespace TeamHamsterBank
         {
             Bank.PrintCurrentExchange();
             int index = -1;
+            string input;
+            Bank.ReturnInstruction(10);
+            Console.SetCursorPosition(7, 18);
             while (index > Account.CurrencyList.Count - 1 || index < 1)
             {
                 Console.Write("\n\n\tVälj vilken valuta:   ");
-                Int32.TryParse(Console.ReadLine(), out index);
+                Int32.TryParse(input = Console.ReadLine(), out index);
+                if (input.Trim().ToUpper() == "R")
+                {
+                    return;
+                }
             }
             Console.Write("\n\n\tSkriv in växlingspriset:   ");
             decimal price = 0;
@@ -78,7 +96,9 @@ namespace TeamHamsterBank
             Account.CurrencyList[index][1] = priceStr;
 
             Console.WriteLine(Account.CurrencyList[index][1]);
+            Console.Clear();
             Bank.PrintCurrentExchange();
+ 
         }
         public void ChangeUserPassword(List<User> users)
         {
