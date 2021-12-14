@@ -19,8 +19,6 @@ namespace TeamHamsterBank
         public static void Login()
         {           
             Console.Clear();
-            //Console.Write("\n\n\t\t\tVälkommen till HamsterBanken\n\n\n" +
-            //        "\tVar god och skriv in ditt Användar-ID:  ");
             Art.HeadLine("\n\n\t\t\tVälkommen till HamsterBanken\n\n\n");
             Console.Write("\tVar god och skriv in ditt Användar-ID:  ");
             int attempts = 3;
