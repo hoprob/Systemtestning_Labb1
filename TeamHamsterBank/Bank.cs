@@ -328,9 +328,9 @@ namespace TeamHamsterBank
                     ExchangeBack(ref maxWithdrawal, ref currency);
                 }
 
-                decimal maxWithdrawalEven = maxWithdrawal - maxWithdrawal % 1000; // Rounds to the nearest and lowest thousands
+                decimal maxWithdrawalEven = maxWithdrawal - maxWithdrawal % 100; // Rounds to the nearest and lowest hundreds
 
-                Console.Write($"\n   Maxsumman du kan ta ut är {maxWithdrawalEven.ToString("F")} {customer._accounts[index].Currency}\n" +
+                Console.Write($"\n   Maxsumman du kan ta ut är [{maxWithdrawalEven.ToString("F")}] {customer._accounts[index].Currency}\n" +
                     "   Var vänlig och bekräfta hur mycket du vill ta ut:   ");
                 Decimal.TryParse(Console.ReadLine(), out withdrawal);
 

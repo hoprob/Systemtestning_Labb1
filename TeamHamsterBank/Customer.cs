@@ -32,7 +32,7 @@ namespace TeamHamsterBank
             Art.HeadLine("\t*** Skapa ett nytt konto ***\n");
 
             // Options for account type
-            Console.WriteLine(" \n\nVänligen ange kontotyp:\n\n" +
+            Console.WriteLine(" \n\n  Vänligen ange kontotyp:\n\n" +
                 "  [1] Allkonto\n" +
                 "  [2] Sparkonto\n" +
                 "  [3] Framtidskonto\n" +
@@ -42,7 +42,7 @@ namespace TeamHamsterBank
             string accountType = String.Empty;
             string input;
             bool rerunSelection;
-            bool accepted = false; // Accept for credit account
+            bool accepted = true; // Accept for credit account
             // Select account type
             do
             {
@@ -91,8 +91,10 @@ namespace TeamHamsterBank
                         Console.Clear();
                         if (num == 1)
                         {
-                            Console.WriteLine("\n  Du är inte beviljad ett kreditkonto hos vår bank.\n\n");
+                            Console.WriteLine("\n  Du är inte beviljad ett kreditkonto hos vår bank.\n\n" +
+                                "  Vänligen klicka Enter för att fortsätta.");
                             accepted = false;
+                            Console.ReadKey();
                         }
                         else
                         {
@@ -125,7 +127,11 @@ namespace TeamHamsterBank
                     {
                         Console.WriteLine("  Kontonamnet är för långt.");
                     }
-                } while (accountName.Length > 15);
+                    else if(accountName.Length <= 0)
+                    {
+                        Console.WriteLine("  Ett kontonamn måste anges");
+                    }
+                } while (accountName.Length > 15 || accountName.Length <= 0);
 
                 // Get currency for new account
                 Console.Write("\n  Vänligen ange valuta för kontot: ");
@@ -186,6 +192,7 @@ namespace TeamHamsterBank
                 // Print details of new account
                 Console.Clear();
                 Console.WriteLine($"\n  Nytt {accountType.Trim()}, {accountName}, har skapats med valuta [{currency}].");
+                Console.ReadKey();
             }
         }
     }

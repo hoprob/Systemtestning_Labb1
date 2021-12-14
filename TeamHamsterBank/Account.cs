@@ -255,12 +255,10 @@ namespace TeamHamsterBank
                     {
                         return;
                     }
-                    if (loanAmount > totalBalance * 2 || loanAmount < 1000m)
-                    Decimal.TryParse(Console.ReadLine(), out loanAmount);
 
                     if (loanAmount > maxLoanAmountEven || loanAmount < 1000m)
                     {
-                        Console.WriteLine($"  Ogiltligt val. Vänligen ange en summa mellan 1000 - {maxLoanAmountEven.ToString("F")} [SEK]");
+                        Console.WriteLine($"  Ogiltligt val. Vänligen ange en summa mellan 1000,00 - {maxLoanAmountEven.ToString("F")} [SEK]");
                     }
                 } while (loanAmount > maxLoanAmountEven || loanAmount < 1000m);
 
