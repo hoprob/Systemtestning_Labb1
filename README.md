@@ -11,6 +11,7 @@ This is a group project for our school work. We have created a bank program that
 * [USING THE PROGRAM](#USING-THE-PROGRAM)
 * [ABOUT THE PROJECT](#ABOUT-THE-PROJECT---Classes-and-objects)
 * [UML-CHART](#UML-CHART)
+* [SCRUM BOARD](#SCRUM-BOARD)
 
 ## TECHNOLOGY AND LANGUAGE
 - Type of application: Console application
@@ -85,3 +86,5 @@ HamsterArt
 Handles the visual effects and graphical content in the application.
 
 ##  UML-CHART
+
+##  SCRUM BOARD
