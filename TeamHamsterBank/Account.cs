@@ -29,7 +29,6 @@ namespace TeamHamsterBank
         private string _customerID;
         internal string CustomerID { get => _customerID; }
 
-
         /*This constructor will only be called to declare the accounts that already
          registered when the app starts runs */
         public Account(string accountName, string accountType, string accountNum,
@@ -59,10 +58,10 @@ namespace TeamHamsterBank
         {
             foreach (string[] transaction in transactionsFile)
             {
-                if (_accountNum.ToString() == transaction[3])
+                if (_accountNum.ToString() == transaction[4])
                 {
                     _transaction.Add(new string[] {transaction[0], transaction[1],
-                                                   transaction[2], transaction[3] });
+                                   transaction[2], transaction[3], transaction[4]});
                 }
             }
         }
@@ -160,21 +159,29 @@ namespace TeamHamsterBank
         }
         public string PrintAccountHistory()
         {
-            string output = String.Empty;
+            StringBuilder output = new StringBuilder();
+            output.Append("\t╔═══════════════════════╤═════════════════╤════════════════╤════════╗\n" +
+                          "\t║         Datum         │   Transaktion   │     Belopp     │ Valuta ║\n" +
+                          "\t╠═══════════════════════╪═════════════════╪════════════════╪════════╣\n");
+
             foreach (string[] transaction in _transaction)
             {
-                                    //  Value     ,      Date       
-                output += $"\n\n\t\t{transaction[0]}\t\t{transaction[1]} {transaction[2]}\n\n";
+                string balanceOutput = $"{decimal.Parse(transaction[2]):0.00}";
+                output.Append(String.Format("\t║ {0,-22}│ {1,-16}│  {2,-14}│   {3,-5}║\n",
+                    transaction[0], transaction[1], balanceOutput, transaction[3]));
+                output.Append("\t╠───────────────────────╪─────────────────╪────────────────╪────────╣\n");
             }
-            return output;
+            output.Append("\t╚═══════════════════════╧═════════════════╧════════════════╧════════╝");
+            return $"\n\n{output}";
         }
-        public static void SubmitTransaction(Customer customer, int accountIndex, decimal value, string currency)
+        public static void SubmitTransaction(string transactionName, Customer customer, 
+            int accountIndex, decimal value, string currency)
         {
             customer._accounts[accountIndex]._transaction.Add(
-                new string[] { DateTime.Now.ToString(), value.ToString(), currency});
+                new string[] { DateTime.Now.ToString(), transactionName, value.ToString(), currency});
             StoreAndLoad.TransactionsFile.Add(
-                new string[] { DateTime.Now.ToString(), value.ToString(),
-                    currency, customer._accounts[accountIndex]._accountNum.ToString() });
+                new string[] {DateTime.Now.ToString(), transactionName, value.ToString(), currency,
+                    customer._accounts[accountIndex]._accountNum.ToString() });
         }
         public bool EnoughBalance(decimal checkSum)
         {
@@ -223,18 +230,24 @@ namespace TeamHamsterBank
             if (totalBalance >= 1000m)
             {
                 decimal maxLoanAmount = totalBalance * 2;
+                string input;
                 // Customer can borrow double the current total balance
+                Bank.ReturnInstruction(4);
                 Console.WriteLine($"  Minimumsumman för lån är 1000,00 [SEK]. " +
-                    $"Du kan låna mellan 1000,00 - {maxLoanAmount.ToString("F")} [SEK] baserat på ditt nuvarande kapital.\n");
-                Console.WriteLine($"  Vi har en engångsavgift på 10% och månadsräntan är 5% av lånsumman\n");
-
+                    $"Du kan låna mellan 1000,00 - {maxLoanAmount.ToString("F")}" +
+                    $" [SEK] \n  baserat på ditt nuvarande kapital.\n");
+                Console.WriteLine($"  Vi har en engångsavgift på 10% och" +
+                    $" månadsräntan är 5% av lånsumman\n");
                 // Input loan amount
                 Console.Write("  Vänligen ange hur mycket du vill låna: ");
                 decimal loanAmount = 0;
                 do
                 {
-                    Decimal.TryParse(Console.ReadLine(), out loanAmount);
-
+                    Decimal.TryParse(input = Console.ReadLine(), out loanAmount);
+                    if (input.Trim().ToUpper() == "R")
+                    {
+                        return;
+                    }
                     if (loanAmount > totalBalance * 2 || loanAmount < 1000m)
                     {
                         Console.WriteLine($"  Ogiltligt val. Vänligen ange en summa mellan 1000 - {maxLoanAmount.ToString("F")} [SEK]");
@@ -276,11 +289,13 @@ namespace TeamHamsterBank
                 // Print summary
                 Console.Clear();
                 Console.Write($"\n\n   '{loanAmount.ToString("F")}' har lagts till [{customer._accounts[index].AccountNumber}]");
-                Account.SubmitTransaction(customer, index, loanAmount, "SEK");
+                Account.SubmitTransaction("Lån", customer, index, loanAmount, "SEK");
                 Console.WriteLine(Account.PrintAccounts(customer));
             }
             // If the customer doesn't have enough money for a loan
-            else { Console.WriteLine("  Du har inte tillräckligt med pengar för att låna från vår bank.\n\n  Vänligen tryck 'Enter' för att fortsätta"); }
+            else { Console.WriteLine("  Du har inte tillräckligt med pengar för att låna från vår bank.\n\n" +
+                "  Vänligen tryck 'Enter' för att fortsätta"); }
+            Bank.Redirecting();
         }
     }
 }

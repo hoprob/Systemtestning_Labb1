@@ -28,10 +28,11 @@ namespace TeamHamsterBank
         }
         public void CreateNewAccount()
         {
+            Bank.ReturnInstruction(2);
             Art.HeadLine("\t*** Skapa ett nytt konto ***\n");
 
             // Options for account type
-            Console.WriteLine("  Vänligen ange kontotyp:\n\n" +
+            Console.WriteLine(" \n\nVänligen ange kontotyp:\n\n" +
                 "  [1] Allkonto\n" +
                 "  [2] Sparkonto\n" +
                 "  [3] Framtidskonto\n" +
@@ -39,13 +40,17 @@ namespace TeamHamsterBank
                 "  [5] Kreditkonto\n");
 
             string accountType = String.Empty;
+            string input;
             bool rerunSelection;
-
             // Select account type
             do
             {
                 Console.Write("\tKontotyp: ");
-                Int32.TryParse(Console.ReadLine(), out int slctAccount);
+                Int32.TryParse(input = Console.ReadLine(), out int slctAccount);
+                if (input.Trim().ToUpper() == "R")
+                {
+                    return;
+                }
 
                 switch (slctAccount)
                 {

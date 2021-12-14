@@ -176,8 +176,8 @@ namespace TeamHamsterBank
                 string save = String.Empty;
                 foreach (string[] transaction in TransactionsFile)
                 {
-                    save +=$"{transaction[0]}________{transaction[1]}" +
-                        $"________{transaction[2]}________{transaction[3]}\n";
+                    save +=$"{transaction[0]}________{transaction[1]}________{transaction[2]}" +
+                        $"________{transaction[3]}________{transaction[4]}\n";
                 }
                 File.WriteAllText("Transactions.txt", save,
                     Encoding.Default);

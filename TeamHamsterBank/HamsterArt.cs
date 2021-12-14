@@ -11,6 +11,11 @@ namespace TeamHamsterBank
             Console.Write(str, Console.ForegroundColor = ConsoleColor.Yellow);
             Console.ResetColor();
         }
+        public static void HeadLine2(string str)
+        {
+            Console.Write(str, Console.ForegroundColor = ConsoleColor.Blue);
+            Console.ResetColor();
+        }
         public static void HamsterWelcome()
         {
             Console.OutputEncoding = Encoding.UTF8;
