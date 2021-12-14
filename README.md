@@ -43,6 +43,8 @@ If a user fails to log in three times the program will be blocked for 1 min.
  - Username: 555555
  - password: password
 
+For other registered users and login details check the textfiles (Users.txt).
+
 Admin menu
 1. Register a new customer
 2. Update exchange rates (API calls)
