@@ -255,8 +255,6 @@ namespace TeamHamsterBank
                     {
                         return;
                     }
-                    if (loanAmount > totalBalance * 2 || loanAmount < 1000m)
-                    Decimal.TryParse(Console.ReadLine(), out loanAmount);
 
                     if (loanAmount > maxLoanAmountEven || loanAmount < 1000m)
                     {
