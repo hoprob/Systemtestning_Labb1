@@ -42,11 +42,7 @@ namespace TeamHamsterBank
             string accountType = String.Empty;
             string input;
             bool rerunSelection;
-<<<<<<< HEAD
-=======
             bool accepted = false; // Accept for credit account
-
->>>>>>> d67653aaa4cf13bbb3438f3ef88767c9a88d8d18
             // Select account type
             do
             {

@@ -236,42 +236,29 @@ namespace TeamHamsterBank
             if (totalBalance >= 1000m)
             {
                 decimal maxLoanAmount = totalBalance * 2;
-<<<<<<< HEAD
                 string input;
-=======
                 decimal maxLoanAmountEven = maxLoanAmount - maxLoanAmount % 1000; // Rounds to the nearest and lowest thousands
 
->>>>>>> d67653aaa4cf13bbb3438f3ef88767c9a88d8d18
                 // Customer can borrow double the current total balance
                 Bank.ReturnInstruction(4);
                 Console.WriteLine($"  Minimumsumman för lån är 1000,00 [SEK]. " +
-<<<<<<< HEAD
-                    $"Du kan låna mellan 1000,00 - {maxLoanAmount.ToString("F")}" +
-                    $" [SEK] \n  baserat på ditt nuvarande kapital.\n");
-                Console.WriteLine($"  Vi har en engångsavgift på 10% och" +
-                    $" månadsräntan är 5% av lånsumman\n");
-=======
                     $"Du kan låna mellan 1000,00 - {maxLoanAmountEven.ToString("F")} [SEK] baserat på ditt nuvarande kapital.\n");
                 Console.WriteLine($"  Vi har en engångsavgift på 10% som dras direkt från lånet och månadsräntan är 5% av lånsumman\n");
 
->>>>>>> d67653aaa4cf13bbb3438f3ef88767c9a88d8d18
                 // Input loan amount
                 Console.Write("  Vänligen ange hur mycket du vill låna: ");
                 decimal loanAmount = 0;
                 do
                 {
-<<<<<<< HEAD
                     Decimal.TryParse(input = Console.ReadLine(), out loanAmount);
                     if (input.Trim().ToUpper() == "R")
                     {
                         return;
                     }
                     if (loanAmount > totalBalance * 2 || loanAmount < 1000m)
-=======
                     Decimal.TryParse(Console.ReadLine(), out loanAmount);
 
                     if (loanAmount > maxLoanAmountEven || loanAmount < 1000m)
->>>>>>> d67653aaa4cf13bbb3438f3ef88767c9a88d8d18
                     {
                         Console.WriteLine($"  Ogiltligt val. Vänligen ange en summa mellan 1000 - {maxLoanAmountEven.ToString("F")} [SEK]");
                     }
