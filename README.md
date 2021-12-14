@@ -9,7 +9,7 @@ This is a group project for our school work. We have created a bank program that
 * [CONTRIBUTERS](#CONTRIBUTERS)
 * [INSTALLATION](#INSTALLATION)
 * [USING THE PROGRAM](#USING-THE-PROGRAM)
-* [ABOUT THE PROJECT](#ABOUT-THE-PROJECT---Classes-and-objects)
+* [ABOUT THE PROGRAM - Classes and objects](#ABOUT-THE-PROGRAM---Classes-and-objects)
 * [UML-CHART](#UML-CHART)
 * [SCRUM BOARD](#SCRUM-BOARD)
 
@@ -62,7 +62,7 @@ Customer menu
 7. Bank loan
 8. Log out
 
-## ABOUT THE PROJECT - Classes and objects
+## ABOUT THE PROGRAM - Classes and objects
 ### StoreAndLoad
 This class reads data from the text-files (Users, Users - Backup, Accounts, Accounts - Backup, Transactions, Transactions - Backup). If these files are lost, the program will print 
 “System maintenance is ongoing” and then it will shut down. 
