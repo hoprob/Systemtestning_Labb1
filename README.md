@@ -81,7 +81,7 @@ This is a subclass from User. It sorts out data from the StoreAndLoad class for 
 ### Account
 This class contains account functions such as transations and bank loan. This class contains all the available currencies in the system. 
 ### SavingsAccount, CreditAccount, MainAccount, FutureAccount, InvestmentAccount
-These are subclasses from Account and contains funtions related to this class. 
+These are subclasses from Account and contains funtions related to these subclasses. 
 ### Bank
 This is a static class that contains the login functions and the user objects. After login it checks the user type and directs the user to the correct menu. Contains the different menues and handles all the menu options in the system. Handles the API calls to update the registered currency rates. 
 HamsterArt
