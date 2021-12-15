@@ -10,12 +10,12 @@ using System.Timers;
 using Art = TeamHamsterBank.HamsterArt;
 
 namespace TeamHamsterBank
-{
-    class Bank
+{  
+    static partial class Bank
     {
-        static System.Timers.Timer aTimer;
+        
         internal static List<User> UsersList = new List<User>();
-        internal static List<Task> UpcomingTransactions = new List<Task>();
+
         public static void Login()
         {           
             Console.Clear();
@@ -190,6 +190,7 @@ namespace TeamHamsterBank
                         Console.ReadKey();
                         break;
                 }
+                StoreAndLoad.SaveUsers();
                 StoreAndLoad.SaveAccounts();
                 StoreAndLoad.SaveTransactions();
             }
@@ -326,9 +327,9 @@ namespace TeamHamsterBank
                     ExchangeBack(ref maxWithdrawal, ref currency);
                 }
 
-                decimal maxWithdrawalEven = maxWithdrawal - maxWithdrawal % 1000; // Rounds to the nearest and lowest thousands
+                decimal maxWithdrawalEven = maxWithdrawal - maxWithdrawal % 100; // Rounds to the nearest and lowest hundreds
 
-                Console.Write($"\n   Maxsumman du kan ta ut är {maxWithdrawalEven.ToString("F")} {customer._accounts[index].Currency}\n" +
+                Console.Write($"\n   Maxsumman du kan ta ut är [{maxWithdrawalEven.ToString("F")}] {customer._accounts[index].Currency}\n" +
                     "   Var vänlig och bekräfta hur mycket du vill ta ut:   ");
                 Decimal.TryParse(Console.ReadLine(), out withdrawal);
 
@@ -722,81 +723,6 @@ namespace TeamHamsterBank
             Console.SetCursorPosition(0, 0);
         }
 
-        static async void UpdateEchangeRates()
-        {
-            string updateDate = string.Empty;
-            Console.WriteLine("\n\n\t\tHämtar uppgifter.........");
-            try
-            {
-                HttpClient client = new HttpClient();
-                foreach (string[] currency in Account.CurrencyList)
-                {
-                    string respons = await client.GetStringAsync(GetRequest(currency[0]));
-                    currency[1] = respons.Substring(11).Replace("}", "");
-                }
-                Console.Clear();
-                updateDate = $"\n\t\t\tUppdaterat {DateTime.Now}\n\n";
-                Art.HeadLine2(updateDate);
-                PrintCurrentExchange();
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("\n\tKontrollera din internetanslutning" +
-                                    " eller testa igen om en timme");
-            }
-        }
-        static string GetRequest(string ISO_Code)
-        {
-            StringBuilder response = new StringBuilder();
-            response.Append("https://free.currconv.com/api/v7/convert?q=");
-            response.Append(ISO_Code);
-            response.Append("_SEK&compact=ultra&apiKey=b9ab32024407ef485ccf");
-
-            return response.ToString();
-        }
-        internal static void PrintCurrentExchange()
-        {
-            Art.HeadLine("\n\tAktuell valutakurs för Svenska kronor (SEK) \n\n");
-            for (int i = 0; i < Account.CurrencyList.Count; i++)
-            {
-                if (Account.CurrencyList[i][0] == "SEK")
-                {
-                    continue;
-                }
-                Console.WriteLine($"   [{i}]    [{ Account.CurrencyList[i][0]}]" +
-                                             $"    {Account.CurrencyList[i][1]}\n");
-            }
-        }
-        public static void ExchangeCurrency(ref decimal transfer, ref string currency)
-        {
-            foreach (string[] _currency in Account.CurrencyList)
-            {
-                if (currency == "SEK")
-                {
-                    return;
-                }
-                else if (_currency[0] == currency)
-                {
-                    transfer *= decimal.Parse(_currency[1], CultureInfo.InvariantCulture);
-                    return;
-                }
-            }
-        }
-        public static void ExchangeBack(ref decimal transfer, ref string currency)
-        {
-            foreach (string[] _currency in Account.CurrencyList)
-            {
-                if (currency == "SEK")
-                {
-                    return;
-                }
-                else if (_currency[0] == currency)
-                {
-                    transfer /= decimal.Parse(_currency[1], CultureInfo.InvariantCulture);
-                    return;
-                }
-            }
-        }
         public static string GetPassword()
         {
             StringBuilder password = new StringBuilder();
@@ -834,24 +760,7 @@ namespace TeamHamsterBank
             }
             return password.ToString();
         }
-        internal static void TransactionProcessTimer()
-        {
-            // Create a timer with a two second interval.
-            aTimer = new System.Timers.Timer(900000);
-            // Hook up the Elapsed event for the timer. 
-            aTimer.Elapsed += OnTimedEvent;
-            aTimer.AutoReset = true;
-            aTimer.Enabled = true;
-        }
-        static void OnTimedEvent(Object source, ElapsedEventArgs e)
-        {
-            foreach (Task task in UpcomingTransactions)
-            {
-                task.Start();
-            }
-            UpcomingTransactions.Clear();
-            StoreAndLoad.SaveAccounts();
-            StoreAndLoad.SaveTransactions();
-        }
+
+
     }
 }
