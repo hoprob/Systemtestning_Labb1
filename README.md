@@ -74,7 +74,7 @@ return from a menu choice, the class will overwrite the text-files with any poss
 
 ### User
 This is an abstract base class for admin and customer classes. Contains logic which is implemented in both admin and customer class. 
-Admin
+### User
 This is a subclass from User that handles the functions that only the admin does.
 ### Customer
 This is a subclass from User. It sorts out data from the StoreAndLoad class for customers that are already registered in the system. Each customer object contains all the customers accounts. 
