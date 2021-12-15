@@ -88,5 +88,5 @@ HamsterArt
 Handles the visual effects and graphical content in the application.
 
 ##  UML-CHART
-
+![Team Hamster](https://user-images.githubusercontent.com/77905783/146100171-83416663-8888-4031-a30c-28158657033b.jpeg)
 ##  SCRUM BOARD
