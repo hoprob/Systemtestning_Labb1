@@ -170,7 +170,7 @@ namespace TeamHamsterBank
                 string balanceOutput = $"{decimal.Parse(transaction[2], CultureInfo.InvariantCulture):0.00}";
                 output.Append(String.Format("\t║ {0,-22}│ {1,-16}│  {2,-14}│   {3,-5}║\n",
                     transaction[0], transaction[1], balanceOutput, transaction[3]));
-                output.Append("\t╠───────────────────────╪─────────────────╪────────────────╪────────╣\n");
+                output.Append("\t╟───────────────────────┼─────────────────┼────────────────┼────────╢\n");
             }
             output.Append("\t╚═══════════════════════╧═════════════════╧════════════════╧════════╝");
             return $"\n\n{output}";
