@@ -60,7 +60,7 @@ namespace TeamHamsterBank
             // Create a new customer object and add to UsersList
             Customer newCustomer = new Customer(userId, inputFullName, inputPassword);
             UsersList.Add(newCustomer);
-
+            StoreAndLoad.SaveUsers();
             Console.Clear();
             Console.WriteLine($"\n  Ny användare {newCustomer.FullName}" +
                 $" med ID {newCustomer.UserID} har skapats.\n\n\n");
@@ -98,7 +98,7 @@ namespace TeamHamsterBank
             Console.WriteLine(Account.CurrencyList[index][1]);
             Console.Clear();
             Bank.PrintCurrentExchange();
- 
+            Bank.Redirecting();
         }
         public void ChangeUserPassword(List<User> users)
         {
