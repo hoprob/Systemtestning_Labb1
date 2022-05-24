@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace TeamHamsterBank
 {
-    abstract class User
+    public abstract class User
     {
         protected string _userId;
         protected string _fullName;
@@ -27,7 +27,7 @@ namespace TeamHamsterBank
         public static User CheckPassword(List<User> users, string inputId, string inputPassword)
         {
             var user = users.Find(u => u._userId == inputId);
-            if (user._password == inputPassword)
+            if (user != null && user._password == inputPassword)
                 return user;
             else
                 return null;

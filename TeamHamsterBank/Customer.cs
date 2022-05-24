@@ -6,7 +6,7 @@ using Art = TeamHamsterBank.HamsterArt;
 
 namespace TeamHamsterBank
 {
-    class Customer : User
+    public class Customer : User
     {
         internal List<Account> _accounts = new List<Account>();
         public Customer(string UserId, string FullName, string Password)

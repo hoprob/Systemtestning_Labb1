@@ -11,7 +11,7 @@ using Art = TeamHamsterBank.HamsterArt;
 
 namespace TeamHamsterBank
 {  
-    static partial class Bank
+    public static partial class Bank
     {
         
         internal static List<User> UsersList = new List<User>();
@@ -355,15 +355,23 @@ namespace TeamHamsterBank
             Redirecting();
         }
 
-        static bool VerifyCustomer(Customer customer)
+        public static bool VerifyCustomer(Customer customer, string inputTestval = "")
         {
             int attempts = 3;
             bool valid = false;
+            string inputPassword;
             while (attempts > 0)
             {
                 attempts--;
                 Console.Write("\n\n   Skriv in ditt lösenord för att verifiera dig:  ");
-                string inputPassword = GetPassword();
+                if(inputTestval == string.Empty)
+                {
+                    inputPassword = GetPassword();
+                }
+                else
+                {
+                    inputPassword = inputTestval;
+                }
                 if (User.CheckPassword(customer, inputPassword))
                 {
                     valid = true;

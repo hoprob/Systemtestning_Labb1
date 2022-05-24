@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31624.102
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamHamsterBank", "TeamHamsterBank\TeamHamsterBank.csproj", "{668A0195-0EE7-427F-92E8-381B51A92A29}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamHamsterBank", "TeamHamsterBank\TeamHamsterBank.csproj", "{668A0195-0EE7-427F-92E8-381B51A92A29}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamHamsterBank.Test", "TeamHamsterBank.Test\TeamHamsterBank.Test.csproj", "{BB524652-3ACE-434A-8434-0AE85534276F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{668A0195-0EE7-427F-92E8-381B51A92A29}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{668A0195-0EE7-427F-92E8-381B51A92A29}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{668A0195-0EE7-427F-92E8-381B51A92A29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB524652-3ACE-434A-8434-0AE85534276F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB524652-3ACE-434A-8434-0AE85534276F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB524652-3ACE-434A-8434-0AE85534276F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB524652-3ACE-434A-8434-0AE85534276F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
