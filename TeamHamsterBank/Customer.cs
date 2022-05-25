@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using Art = TeamHamsterBank.HamsterArt;
 
+[assembly: InternalsVisibleTo("TeamHamsterBank.Test")]
 namespace TeamHamsterBank
 {
-    public class Customer : User
+    class Customer : User
     {
         internal List<Account> _accounts = new List<Account>();
         public Customer(string UserId, string FullName, string Password)

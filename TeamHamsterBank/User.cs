@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
+[assembly: InternalsVisibleTo("TeamHamsterBank.Test")]
 namespace TeamHamsterBank
 {
-    public abstract class User
+    internal abstract class User
     {
         protected string _userId;
         protected string _fullName;

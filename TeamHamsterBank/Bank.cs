@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using Art = TeamHamsterBank.HamsterArt;
 
+
 namespace TeamHamsterBank
 {  
     public static partial class Bank
@@ -354,8 +355,8 @@ namespace TeamHamsterBank
             Console.WriteLine(Account.PrintAccounts(customer));
             Redirecting();
         }
-
-        public static bool VerifyCustomer(Customer customer, string inputTestval = "")
+        
+        internal static bool VerifyCustomer(Customer customer, string inputTestval = "")
         {
             int attempts = 3;
             bool valid = false;

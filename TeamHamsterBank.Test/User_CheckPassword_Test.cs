@@ -36,10 +36,10 @@ namespace TeamHamsterBank.Test
             Assert.AreSame(expected, actual);
         }
         [TestMethod]
-        public void CheckPassword_CorrectUser_IncorrectPassword_UserId_123456_Password_WrongPW_Return_null()
+        public void CheckPassword_CorrectUser_IncorrectPassword_UserId_123458_Password_WrongPW_Return_null()
         {
             //Arrange
-            string inputId = "123456";
+            string inputId = "123458";
             string inputPassword = "WrongPW";
             //Act
             var actual = User.CheckPassword(_testUsers, inputId, inputPassword);
@@ -47,11 +47,22 @@ namespace TeamHamsterBank.Test
             Assert.IsNull(actual);
         }
         [TestMethod]
-        public void CheckPassword_Wronguser_CorrectPassword_UserId123954_Password_Test1234_Return_null()
+        public void CheckPassword_Wronguser_CorrectPassword_UserId_123954_Password_Test1234_Return_null()
         {
             //Arrange
             string inputId = "123954";
             string inputPassword = "Test1234";
+            //Act
+            var actual = User.CheckPassword(_testUsers, inputId, inputPassword);
+            //Assert
+            Assert.IsNull(actual);
+        }
+        [TestMethod]
+        public void CheckPassword_CorrectUser_PasswordLowerCase_UserId_123459_Password_secure321_Return_False()
+        {
+            //Arrange
+            string inputId = "123459";
+            string inputPassword = "secure321";
             //Act
             var actual = User.CheckPassword(_testUsers, inputId, inputPassword);
             //Assert

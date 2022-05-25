@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("TeamHamsterBank.Test")]
 namespace TeamHamsterBank
 {
-    class Account
+    internal class Account
     {
         private List<string[]> _transaction = new List<string[]>();
 
