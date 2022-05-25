@@ -27,10 +27,10 @@ Jag har valt ut 3st delar ur koden som jag finner är dels viktiga för programm
     <ul>
      <li>Att metoden skickar tillbaka null trots att det finns en användare och lösenord som matchar i listan. </li>
      <li>Att metoden kan returnera en true bool trots att användaren finns men lösenordet är fel.</li>
-     <li>Att metoden inte returnerar någonting och genererar fel som krachar programmet.</li>
-      <p> *(Hittade ett fel i koden när den skulle testas. Då användaren inte hittades i listan och metoden gick in i en if-sats där lösenordet hos användaren skulle
+     <li>Att metoden inte returnerar någonting och genererar fel som krachar programmet.</li></br>
+      <p> <i>(Hittade ett fel i koden när den skulle testas. Då användaren inte hittades i listan och metoden gick in i en if-sats där lösenordet hos användaren skulle
         jämföras med det medskickade lösenordet, då krashade programmet då användar-objektet var null. Jag lade till ett villkor i if-satsen för att först kolla
-        att objektet inte är null. Felet uppstod aldrig i applikationen då det i programmet redan var kollat att en användare finns.)* </p>
+        att objektet inte är null. Felet uppstod aldrig i applikationen då det i programmet redan var kollat att en användare finns.)</i></p>
      <li>Att programmet inte ser skillnad på stora och små bokstäver</li>
      </ul>
     </p>
