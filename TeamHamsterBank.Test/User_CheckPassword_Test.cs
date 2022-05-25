@@ -17,52 +17,48 @@ namespace TeamHamsterBank.Test
             _testUsers = new List<User>()
             {
                 new Customer("123456", "Test Testsson", "Test1234"),
-                new Customer("123457", "Does Thiswork", "Tesing987654"),
-                new Customer("123458", "Whats Theoutcome", "guessthis1245"),
+                new Customer("123457", "Does Thiswork", "Testing987654"),
+                new Customer("123458", "Whats Theoutcome", "Guessthis1245"),
                 new Customer("123459", "Isit Bugfree", "Secure321"),
                 new Customer("123451", "Allabout Unittests", "HackMe2356"),
             };
         }
         [TestMethod]
-        public void CheckPassword_CorrectUser_CorrectPassword_UserId_123456_Password_Test123_Return_User()
+        [DataRow("123456", "Test1234", 0)]
+        [DataRow("123457", "Testing987654", 1)]
+        [DataRow("123458", "Guessthis1245", 2)]
+        [DataRow("123459", "Secure321", 3)]
+        [DataRow("123451", "HackMe2356", 4)]
+        public void CheckPassword_CorrectUser_CorrectPassword_UserId_FromDR_Password_FromDR_Return_User(string inputId, string inputPassword, int index)
         {
             //Arrange
-            string inputId = "123456";
-            string inputPassword = "Test1234";
-            var expected = _testUsers[0];
+            var expected = _testUsers[index];
             //Act
             var actual = User.CheckPassword(_testUsers, inputId, inputPassword);
             //Assert
             Assert.AreSame(expected, actual);
         }
         [TestMethod]
-        public void CheckPassword_CorrectUser_IncorrectPassword_UserId_123458_Password_WrongPW_Return_null()
+        [DataRow("WrongPW")]
+        [DataRow("guessthis1245")]
+        [DataRow("GUESSTHIS1245")]
+        [DataRow("Guessthis12456")]
+        public void CheckPassword_CorrectUser_IncorrectPassword_UserId_123458_Password_FromDR_Return_null(string inputPassword)
         {
             //Arrange
             string inputId = "123458";
-            string inputPassword = "WrongPW";
             //Act
             var actual = User.CheckPassword(_testUsers, inputId, inputPassword);
             //Assert
             Assert.IsNull(actual);
         }
         [TestMethod]
-        public void CheckPassword_Wronguser_CorrectPassword_UserId_123954_Password_Test1234_Return_null()
+        [DataRow("123456D", "Test1234")]
+        [DataRow("123457D", "Testing987654")]
+        [DataRow("123451D", "HackMe2356")]
+        public void CheckPassword_Wronguser_CorrectPassword_UserId_FromDR_Password_FromDR_Return_null(string inputId, string inputPassword)
         {
             //Arrange
-            string inputId = "123954";
-            string inputPassword = "Test1234";
-            //Act
-            var actual = User.CheckPassword(_testUsers, inputId, inputPassword);
-            //Assert
-            Assert.IsNull(actual);
-        }
-        [TestMethod]
-        public void CheckPassword_CorrectUser_PasswordLowerCase_UserId_123459_Password_secure321_Return_False()
-        {
-            //Arrange
-            string inputId = "123459";
-            string inputPassword = "secure321";
             //Act
             var actual = User.CheckPassword(_testUsers, inputId, inputPassword);
             //Assert
