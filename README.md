@@ -1,3 +1,57 @@
+# Systemtestning Labb1
+
+### Utvalda delar att testa:
+Jag har valt ut 3st delar ur koden som jag finner är dels viktiga för programmets säkerhet och funktion men också rimliga att testa utifrån den applikation som jag jobbar med. 
+ Det är väldigt tydligt att vi ej jobbade testdrivet när vi gjorde bank-projektet, detta ser man då det är långa metoder med lite för mycket innehåll och mycket utskrifter till konsollen blandat med logik. Det är inte heller många metoder som returnerar något utan många metoder som sköter hela "kedjan" i applikationen från användarens interagering till data som lagras. 
+ Jag har har därför valt ut följande delar:
+ <ul>
+  <li>VerifyCostumer<p>Denna metod verifierar att ett lösenord som skrivs in stämmer överrens med en användares och returnerar en bool. Den här delen av programmet är viktig då det inte får komma in fel användare i systemet och att lösenorden måste funka.</p></li>
+  <li>CheckPassword<p>I den här metoden skall först och främst en användare hittas i en lista av användare. Om den inte hittas skall metoden returnera null. Metoden skall sedan kontrollera det inmatade lösenordet mot användarens lösenord, är det en match så skickas ett användar-objekt tillbaka som sedan används för att knyta an till konton etc i systemet. Är det inte en match så skickas null tillbaka. Denna metoden är likt den förra viktig för programmets säkerhet och det ställs krav på att det både skall finnas en användare i systemet och att lösenordet skall matcha vilket skall säkerställa att endast användare med tillgång till systemet kan komma in.</p></li>
+ <li>EnoughBalance<p>Den här metoden tillhör basklassen för konton och säkerställer att det finns tillräckligt med pengar på kontot. Detta genom att ta in en kontrollsumma som skall vara lägre än saldot på kontot, då returneras en bool som är true. Är saldot lägre så returneras en bool som är false. Denna metod är viktig för att användaren inte skall kunna föra över eller ta ut pengar som den inte har.</p></li>
+ </ul>
+ 
+## Vad Kan gå fel?
+ <ul>
+  <li>VerifyCostumer
+   <p>
+   <ul>
+    <li>Att fel lösenord har lagrats i användarobjektet</li>
+    <li>Att metoden skickar tillbaka en bool som är true även fast lösenordet är fel, eller tvärt om.</li>
+    <li>Att programmet inte ser skillnad på stora och små bokstäver</li>
+   </ul>
+   </p>
+   </li>
+
+  <li>CheckPassword 
+	  <p>
+    <ul>
+     <li>Att metoden skickar tillbaka null trots att det finns en användare och lösenord som matchar i listan. </li>
+     <li>Att metoden kan returnera en true bool trots att användaren finns men lösenordet är fel.</li>
+     <li>Att metoden inte returnerar någonting och genererar fel som krachar programmet.</li>
+      <p> *(Hittade ett fel i koden när den skulle testas. Då användaren inte hittades i listan och metoden gick in i en if-sats där lösenordet hos användaren skulle
+        jämföras med det medskickade lösenordet, då krashade programmet då användar-objektet var null. Jag lade till ett villkor i if-satsen för att först kolla
+        att objektet inte är null. Felet uppstod aldrig i applikationen då det i programmet redan var kollat att en användare finns.)* </p>
+     <li>Att programmet inte ser skillnad på stora och små bokstäver</li>
+     </ul>
+    </p>
+   </li>
+
+
+  <li>EnoughBalance
+   <p>
+    <ul>
+      <li>Att metoden skickar tillbaka en false bool trots att det finns tillräckligt med pengar på kontot</li>
+      <li>Eller tvärt om ovanstående.</li>
+      <li>Att metoden inte fungerar med decimaler</li>
+      <li>Att metoden inte fungerar med minus siffror</li>
+      <li>Att metoden returnerar false om sifforna är likadana</li>
+     </ul>
+    </p>
+   </li>
+
+</ul>
+
+
 # TeamHamsterBank
 ***Version 1.0.0***
 
